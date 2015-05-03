@@ -53,12 +53,12 @@ class MapClientNode:
         if(CUR_SERV_STATE == 'MAP_DONE'):
             if(not self.MAP_FLAG):
                 subprocess.call('rosrun map_server map_saver -f \
-                    /home/smartlab-tb02/map',  shell=True)
-                FILE = open('/home/smartlab-tb02/map.yaml', 'rb')
+                    /home/smartlab-tb01/map',  shell=True)
+                FILE = open('/home/smartlab-tb01/map.yaml', 'rb')
                 DATA = FILE.read()
                 FILE.close()
                 self.MAP_CLIENT.SendFile(DATA, 'MAP_YAML')
-                FILE = open('/home/smartlab-tb02/map.pgm', 'rb')
+                FILE = open('/home/smartlab-tb01/map.pgm', 'rb')
                 DATA = DATA + FILE.read()
                 FILE.close()
                 self.MAP_CLIENT.SendFile(DATA, 'MAP_PGM')
