@@ -73,10 +73,12 @@ class ArmClientNode:
             if(not self.IMAGE_FLAG):
                 self.IMAGE_FLAG = RosImageToPPMString(DATA)
                 self.ARM_CLIENT.SendFile(self.IMAGE_FLAG, 'OBJ')
+                self.IMAGE_FLAG = True
         elif(self.ARM_CLIENT.ServState() == 'ARM_PICKUP'):
             if(not self.IMAGE_FLAG):
                 self.IMAGE_FLAG = RosImageToPPMString(DATA)
                 self.ARM_CLIENT.SendFile(self.IMAGE_FLAG, 'VER')
+                self.IMAGE_FLAG = True
 
     def WorkCallback(self):
         CUR_SERV_STATE = self.ARM_CLIENT.ServState()
