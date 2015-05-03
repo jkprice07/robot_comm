@@ -55,7 +55,7 @@ class MapClientNode:
         if(CUR_SERV_STATE == 'MAP_DONE'):
             if(not self.MAP_FLAG):
                 subprocess.call('rosrun map_server map_saver -f map',  shell=True)
-                FILE = open('/home/map.yaml', 'rb')
+                FILE = open('/home/smartmap.yaml', 'rb')
                 DATA = FILE.read()
                 FILE.close()
                 self.MAP_CLIENT.SendFile(DATA, 'MAP_YAML')

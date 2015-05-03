@@ -65,7 +65,7 @@ class BinClientNode:
         if(CUR_SERV_STATE == 'BIN_TO_ARM'):
             if(not self.POSE_FLAG):
                 POSE_STRING = self.BIN_CLIENT.RecvPose('OBJ')
-                rospy.loginfo('POSE: ', POSE_STRING)
+                rospy.loginfo('POSE: ' + POSE_STRING)
                 if(isinstance(POSE_STRING, str)):
                     self.POSE_FLAG = True
                     POSE_DICT = ast.literal_eval(POSE_STRING)

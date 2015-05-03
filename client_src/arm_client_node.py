@@ -93,7 +93,7 @@ class ArmClientNode:
         if(CUR_SERV_STATE == 'FOUND_OBJ'):
             if(not self.POSE_FLAG):
                 POSE_STRING = self.ARM_CLIENT.RecvPose('OBJ')
-                rospy.loginfo('POSE: ', POSE_STRING)
+                rospy.loginfo('POSE: ' + POSE_STRING)
                 if(isinstance(POSE_STRING, str)):
                     self.POSE_FLAG = True
                     POSE_DICT = ast.literal_eval(POSE_STRING)
