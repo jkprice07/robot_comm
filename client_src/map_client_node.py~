@@ -21,8 +21,11 @@ class MapClientNode:
         self.MAP_DIR = MAP_DIR
         self.MAP_CLIENT = BotClient(HOST_ADDR, 'MAPBOT')
         self.PRINT_FLAG = None
-        self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
-            os.path.isfile(self.MAP_DIR + 'map.yaml')
+	if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
+            os.remove(self.MAP_DIR + 'map.pgm')
+        if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
+            os.remove(self.MAP_DIR + 'map.yaml')
+        self.MAP_FLAG = None
         # Subscriptions
         rospy.Subscriber('/map_bot_base/state', String, self.MapStateCallback)
         rospy.Subscriber('/slam_out_pose', PoseStamped, self.MapPoseCallback)
@@ -52,13 +55,12 @@ class MapClientNode:
 
         if(CUR_SERV_STATE == 'MAP_DONE'):
             if(not self.MAP_FLAG):
-                subprocess.call('rosrun map_server map_saver -f \
-                    /home/smartlab-tb01/map',  shell=True)
-                FILE = open('/home/smartlab-tb01/map.yaml', 'rb')
+                subprocess.call('rosrun map_server map_saver -f map',  shell=True)
+                FILE = open('/home/map.yaml', 'rb')
                 DATA = FILE.read()
                 FILE.close()
                 self.MAP_CLIENT.SendFile(DATA, 'MAP_YAML')
-                FILE = open('/home/smartlab-tb01/map.pgm', 'rb')
+                FILE = open('/home/map.pgm', 'rb')
                 DATA = DATA + FILE.read()
                 FILE.close()
                 self.MAP_CLIENT.SendFile(DATA, 'MAP_PGM')
