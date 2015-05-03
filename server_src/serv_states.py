@@ -289,7 +289,7 @@ class BIN_TO_BASE(State):
     def Execute(self):
         BOT_DATA = self.SERV.BotData()
         OBJ_POSE = self.SERV.ObjPose()
-        if(BOT_DATA['STATES']['BINBOT'] == 'FSM_IDLE'):
+        if(BOT_DATA['STATES']['BINBOT'] == 'FSM_MOVE_TO_BASE'):
             if(OBJ_POSE):
                 self.SERV.FSM.ToTransition('To_FOUND_OBJ')
             else:

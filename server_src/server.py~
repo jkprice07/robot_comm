@@ -239,11 +239,14 @@ class Server:
                     self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PNG'):
-		FILE = Image.open(self.MAP_DIR + 'map.pgm')
-                FILE.save(self.MAP_DIR + 'map.png')
-                DATA = self.ReadFile(self.MAP_DIR + 'map.png')
-                sleep(1)
-                self.Send(CONN, 1024, DATA)
+		if(os.path.isfile(self.MAP_DIR + 'map.png')):
+                    DATA = self.ReadFile(self.MAP_DIR + 'map.png')
+                    self.Send(CONN, 1024, DATA)
+		elif(os.path.isfile(self.MAP_DIR + 'map.pgm')):
+                    FILE = Image.open(self.MAP_DIR + 'map.pgm')
+                    FILE.save(self.MAP_DIR + 'map.png')
+                    DATA = self.ReadFile(self.MAP_DIR + 'map.png')
+                    self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PGM'):
                 if(self.MAP_FLAG):
