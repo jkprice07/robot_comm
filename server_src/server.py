@@ -39,7 +39,7 @@ class Server:
         self.START_PROCESS = False
         self.SYNC = False
         self.USER_INPUT = None
-        self.RESET_COUNT = None
+        self.RESET_COUNT = 0
         #  Initialise MAP and IMAGE flags.
         self.MAP_FLAG = None
         self.IMAGE_FLAG = None
@@ -230,27 +230,30 @@ class Server:
             #  (.pgm + .yaml).
             elif(MSG == 'SEND_OBJ_PNG'):
                 if(self.IMAGE_FLAG):
-					DATA = self.ReadFile(self.IMAGE_DIR + 'object_image.png')
-					self.Send(CONN, 1024, DATA)
+		    DATA = self.ReadFile(self.IMAGE_DIR + 'object_image.png')
+		    self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_VER_PNG'):
                 if(self.IMAGE_FLAG):
-					DATA = self.ReadFile(self.IMAGE_DIR + 'verify_image.png')
-					self.Send(CONN, 1024, DATA)
+                    DATA = self.ReadFile(self.IMAGE_DIR + 'verify_image.png')
+                    self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PNG'):
+		FILE = Image.open(self.MAP_DIR + 'map.pgm')
+                FILE.save(self.MAP_DIR + 'map.png')
                 DATA = self.ReadFile(self.MAP_DIR + 'map.png')
+                sleep(1)
                 self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PGM'):
                 if(self.MAP_FLAG):
-					DATA = self.ReadFile(self.MAP_DIR + 'map.pgm')
-					self.Send(CONN, 32, DATA)
+                    DATA = self.ReadFile(self.MAP_DIR + 'map.pgm')
+                    self.Send(CONN, 32, DATA)
 
             elif(MSG == 'SEND_MAP_YAML'):
                 if(self.MAP_FLAG):
-					DATA = self.ReadFile(self.MAP_DIR + 'map.yaml')
-					self.Send(CONN, 32, DATA)
+                    DATA = self.ReadFile(self.MAP_DIR + 'map.yaml')
+                    self.Send(CONN, 32, DATA)
 
             ##############################################################
             #  Message handlers for starting and reseting the process,
@@ -301,6 +304,7 @@ class Server:
             #  reseting to `NONE' if so.
             CUR_TIME = time()
             TIMEOUT = 5
+            CUR_STATE = self.FSM.curState.StateName()
             if(CUR_TIME > self.ARM_TIME + TIMEOUT):
                 self.DATA['STATES']['ARMBOT'] = 'NONE'
             if(CUR_TIME > self.BASE_TIME + TIMEOUT):
@@ -324,20 +328,19 @@ class Server:
             CON_2 = os.path.isfile(self.IMAGE_DIR + 'verify_image.png')
             self.IMAGE_FLAG = CON_1 or CON_2
             #  Remove image files/reset user input if not in decision state.
-            if((self.FSM.curState.StateName() != 'USER_DEC') and
-               (self.FSM.curState.StateName() != 'PICKUP_CHECK')):
+            if((CUR_STATE != 'USER_DEC') and (CUR_STATE != 'PICKUP_CHECK')):
                 if(os.path.isfile(self.IMAGE_DIR + 'object_image.png')):
-                    os.remove(self.self.IMAGE_DIR + 'object_image.png')
+                    os.remove(self.IMAGE_DIR + 'object_image.png')
                 if(os.path.isfile(self.IMAGE_DIR + 'verify_image.png')):
                     os.remove(self.IMAGE_DIR + 'verify_image.png')
-                if(self.FSM.curState.StateName() != 'MAPPING_MAN'):
+                if(CUR_STATE != 'MAPPING_MAN'):
                     self.USER_INPUT = None
             #  Reset pose list and start variable in RESET.
-            if(self.FSM.curState.StateName() == 'RESET'):
+            if(CUR_STATE == 'RESET'):
                 self.START_PROCESS = False
                 self.OBJ_POSE = []
             else:
-                self.RESET_COUNT = None
+                self.RESET_COUNT = 0
             # self.FSM.Execute()
             sleep(1)
 

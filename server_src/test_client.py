@@ -22,13 +22,13 @@ elif(ACTION == '3'):
     if(ACTION == '1'):
         sock.send('INPUT#PICKUP#')
     elif(ACTION == '2'):
-        sock.send('INPUT#NO_PICKUP#')
+        sock.send('INPUT#LEAVE#')
 elif(ACTION == '4'):
     print 'Enter 1 for success,\n2 for failure.'
     ACTION = raw_input('')
     if(ACTION == '1'):
-        sock.send('INPUT#SUCCESS#')
+        sock.send('INPUT#SUCC#')
     elif(ACTION == '2'):
-        sock.send('INPUT#FAILURE#')
+        sock.send('INPUT#FAIL#')
 elif(ACTION == '5'):
     sock.send('RESET#')
