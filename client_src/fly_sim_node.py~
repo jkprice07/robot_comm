@@ -17,6 +17,7 @@ class FlyNode:
     def __init__(self, HOST_ADDR, MAP_DIR):
         self.FLY_CLIENT = BotClient(HOST_ADDR, 'FLYBOT')
         self.MAP_DIR = MAP_DIR
+        self.PRINT_FLAG = None
         if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
             os.remove(self.MAP_DIR + 'map.pgm')
         if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
@@ -31,6 +32,11 @@ class FlyNode:
 
     def WorkCallback(self):
         CUR_SERV_STATE = self.FLY_CLIENT.ServState()
+
+        if(self.PRINT_FLAG != CUR_SERV_STATE):
+            self.PRINT_FLAG = CUR_SERV_STATE
+            rospy.loginfo(self.PRINT_FLAG)
+
         if(CUR_SERV_STATE == 'MAP_AT_SERVER'):
             self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
 		os.path.isfile(self.MAP_DIR + 'map.yaml')
