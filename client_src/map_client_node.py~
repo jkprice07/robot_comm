@@ -16,15 +16,14 @@ RATE = 2
 
 class MapClientNode:
 
-    def __init__(self, HOST_ADDR, MAP_DIR):
+    def __init__(self, HOST_ADDR):
         self.HOST_ADDR = HOST_ADDR
-        self.MAP_DIR = MAP_DIR
         self.MAP_CLIENT = BotClient(HOST_ADDR, 'MAPBOT')
         self.PRINT_FLAG = None
-	if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
-            os.remove(self.MAP_DIR + 'map.pgm')
-        if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
-            os.remove(self.MAP_DIR + 'map.yaml')
+	if(os.path.isfile('/home/map.pgm')):
+            os.remove('/home/map.pgm')
+        if(os.path.isfile('/home/map.yaml')):
+            os.remove('/home/map.yaml')
         self.MAP_FLAG = None
         # Subscriptions
         rospy.Subscriber('/map_bot_base/state', String, self.MapStateCallback)
@@ -66,9 +65,8 @@ class MapClientNode:
                 self.MAP_CLIENT.SendFile(DATA, 'MAP_PGM')
                 self.MAP_FLAG = True
         else:
-            self.MAP_FLAG = os.path.isfile(
-            self.MAP_DIR + 'map.pgm') and \
-            	os.path.isfile(self.MAP_DIR + 'map.yaml')
+            self.MAP_FLAG = os.path.isfile('/home/map.pgm') and \
+            	os.path.isfile('/home/map.yaml')
 
     def Spin(self):
         self.MAP_CLIENT.Start()
@@ -83,6 +81,5 @@ if __name__ == "__main__":
     print 'Enter port: '
     PORT = int(raw_input(''))
     HOST_ADDR = ('192.168.0.117', PORT)
-    MAP_DIR = '/home/smartlab-tb01/map/'
-    CLIENT_NODE = MapClientNode(HOST_ADDR, MAP_DIR)
+    CLIENT_NODE = MapClientNode(HOST_ADDR)
     CLIENT_NODE.Spin()
