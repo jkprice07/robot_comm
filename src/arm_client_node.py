@@ -78,6 +78,8 @@ class ArmClientNode:
                 PPM_DATA = RosImageToPPMString(DATA)
                 self.ARM_CLIENT.SendFile(PPM_DATA, 'VER')
                 self.IMAGE_FLAG = True
+        elif:
+            self.IMAGE_FLAG = None
 
     def WorkCallback(self):
         CUR_SERV_STATE = self.ARM_CLIENT.ServState()
