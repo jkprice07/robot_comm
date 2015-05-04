@@ -5,6 +5,7 @@
 import rospy
 import subprocess
 import os
+import time
 from read_settings import *
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import String
@@ -58,6 +59,7 @@ class MapClientNode:
             if(not self.MAP_FLAG):
                 subprocess.call('rosrun map_server \
                     map_saver -f map',  shell=True)
+                time.sleep(5)
                 YAML_DATA = self.ReadFile(self.MAP_DIR + '/map.yaml')
                 YAML_DATA = self.FixYAML(YAML_DATA)
                 self.MAP_CLIENT.SendFile(YAML_DATA, 'MAP_YAML')
