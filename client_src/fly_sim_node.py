@@ -4,6 +4,7 @@
 
 import rospy
 import os
+from get_address import GetAddress
 from clientclass import BotClient
 from move_base_msgs.msg import *
 from geometry_msgs.msg import PoseStamped
@@ -60,9 +61,7 @@ class FlyNode:
 
 if __name__ == '__main__':
     rospy.init_node('fly_sim_node')
-    print 'Enter port: '
-    PORT = int(raw_input(''))
-    HOST_ADDR = ('192.168.0.117', PORT)
+    HOST_ADDR = GetAddress()
     MAP_DIR = '/home/hrteam/Documents/map_recv/'
     FLY = FlyNode(HOST_ADDR, MAP_DIR)
     FLY.Spin()

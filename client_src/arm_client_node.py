@@ -7,6 +7,7 @@ import time
 import threading
 import ast
 import os
+from get_address import GetAddress
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
@@ -121,11 +122,10 @@ class ArmClientNode:
         self.ARM_CLIENT.Stop()
         self.ARM_BASE_CLIENT.Stop()
 
+
 if __name__ == "__main__":
     rospy.init_node('arm_client_node')
-    print 'Enter port: '
-    PORT = int(raw_input(''))
-    HOST_ADDR = ('192.168.0.117', PORT)
+    HOST_ADDR = GetAddress()
     MAP_DIR = '/home/jason/map/'
     CLIENT_NODE = ArmClientNode(HOST_ADDR, MAP_DIR)
     CLIENT_NODE.Spin()

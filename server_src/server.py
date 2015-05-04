@@ -6,6 +6,7 @@ import socket
 import threading
 import ast
 import os
+from get_address import GetAddress
 from time import sleep, time
 from PIL import Image
 from fsm import FSM
@@ -480,9 +481,8 @@ class Server:
         FILE.close()
 
 if __name__ == "__main__":
-    PORT = int(raw_input('Enter port:\n'))
-    #HOST_ADDR = ('192.168.0.117', PORT)
-    HOST_ADDR = ('localhost', PORT)
+    HOST_ADDR = GetAddress()
+    print (HOST_ADDR)
     MAP_DIR = '/home/hrteam/Documents/map/'
     IMAGE_DIR = '/home/hrteam/Documents/image/'
     SERV = Server(HOST_ADDR, MAP_DIR, IMAGE_DIR)

@@ -5,6 +5,7 @@
 import rospy
 import subprocess
 import os
+from get_address import GetAddress
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
@@ -98,9 +99,7 @@ class MapClientNode:
 
 if __name__ == "__main__":
     rospy.init_node('map_client_node')
-    print 'Enter port: '
-    PORT = int(raw_input(''))
-    HOST_ADDR = ('192.168.0.117', PORT)
+    HOST_ADDR = GetAddress()
     MAP_DIR = '/home/smartlab-tb01/'
     CLIENT_NODE = MapClientNode(HOST_ADDR, MAP_DIR)
     CLIENT_NODE.Spin()
