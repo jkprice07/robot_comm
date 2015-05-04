@@ -57,6 +57,7 @@ class MapClientNode:
 
         if(CUR_SERV_STATE == 'MAP_DONE'):
             if(not self.MAP_FLAG):
+                subprocess.call('cd')
                 subprocess.call('rosrun map_server \
                     map_saver -f map',  shell=True)
                 time.sleep(5)
@@ -101,9 +102,9 @@ class MapClientNode:
 
 if __name__ == "__main__":
     rospy.init_node('map_client_node')
-    #IP, MAP_DIR = ReadSettings('MAPBOT')
-    IP = '192.168.0.117'
-    MAP_DIR = '/home/smartlab-tb01/catkin_ws_hydro/src/robot_comm'
+    IP, MAP_DIR = ReadSettings('MAPBOT')
+    #IP = '192.168.0.117'
+    #MAP_DIR = '/home/smartlab-tb01/catkin_ws_hydro/src/robot_comm'
     PORT = int(raw_input('Enter port:\n'))
     HOST_ADDR = (IP, PORT)
     CLIENT_NODE = MapClientNode(HOST_ADDR, MAP_DIR)
