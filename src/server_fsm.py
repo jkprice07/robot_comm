@@ -249,9 +249,8 @@ class BIN_AT_ARM(State):
 
     def Execute(self):
         BOT_DATA = self.SERV.BotData()
-        if(BOT_DATA['STATES']['ARMBOT'] == 'WAIT'):
-            if(BOT_DATA['STATES']['BINBOT'] == 'FSM_WAIT_FOR_ACTION'):
-                self.SERV.FSM.ToTransition('To_ARM_PICKUP')
+        if(BOT_DATA['STATES']['ARMBOT'] == 'VERIFY'):
+            self.SERV.FSM.ToTransition('To_ARM_PICKUP')
 
     def StateName(self):
         return 'BIN_AT_ARM'
