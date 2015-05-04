@@ -232,8 +232,10 @@ class Server:
             #  (.pgm + .yaml).
             elif(MSG == 'SEND_OBJ_PNG'):
                 if(self.IMAGE_FLAG):
+                    print 'TSVETAN'
                     DATA = self.ReadFile(self.IMAGE_DIR + '/object_image.png')
                     self.Send(CONN, 1024, DATA)
+                    print 'TSVETAN 2'
 
             elif(MSG == 'SEND_VER_PNG'):
                 if(self.IMAGE_FLAG):
