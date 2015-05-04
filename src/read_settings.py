@@ -7,8 +7,9 @@ def Decode(LINE):
 
 
 def ReadSettings(TYPE):
-    FILE = open(os.path.split(os.path.abspath(os.getcwd()))[0] +
-                '/settings.txt', 'rb')
+    #FILE = open(os.path.split(os.path.abspath(os.getcwd()))[0] +
+                #'/settings.txt', 'rb')
+    FILE = open(os.getcwd(), 'rb')
     IP = Decode(FILE.readline())
     SERV_MAP = Decode(FILE.readline())
     SERV_IM = Decode(FILE.readline())
