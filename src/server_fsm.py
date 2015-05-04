@@ -195,37 +195,37 @@ class ARM_SEARCH(State):
         return 'ARM_SEARCH'
 
 
-class USER_DEC(State):
-
-    def __init__(self, SERV):
-        super(USER_DEC, self).__init__(SERV)
-
-    def Execute(self):
-        USER_INPUT = self.SERV.UserData()
-        OBJ_POSE = self.SERV.ObjPose()
-        if(USER_INPUT == 'PICKUP'):
-            self.SERV.FSM.ToTransition('To_BIN_TO_ARM')
-        elif(USER_INPUT == 'LEAVE'):
-            self.SERV.PopObjPose()
-            if(OBJ_POSE):
-                self.SERV.FSM.ToTransition('To_FOUND_OBJ')
-            else:
-                self.SERV.SetCount()
-                self.SERV.FSM.ToTransition('To_RESET')
-
-    def StateName(self):
-        return 'USER_DEC'
-
 # class USER_DEC(State):
 
 #     def __init__(self, SERV):
 #         super(USER_DEC, self).__init__(SERV)
 
 #     def Execute(self):
-#         self.SERV.FSM.ToTransition('To_BIN_TO_ARM')
+#         USER_INPUT = self.SERV.UserData()
+#         OBJ_POSE = self.SERV.ObjPose()
+#         if(USER_INPUT == 'PICKUP'):
+#             self.SERV.FSM.ToTransition('To_BIN_TO_ARM')
+#         elif(USER_INPUT == 'LEAVE'):
+#             self.SERV.PopObjPose()
+#             if(OBJ_POSE):
+#                 self.SERV.FSM.ToTransition('To_FOUND_OBJ')
+#             else:
+#                 self.SERV.SetCount()
+#                 self.SERV.FSM.ToTransition('To_RESET')
 
 #     def StateName(self):
 #         return 'USER_DEC'
+
+class USER_DEC(State):
+
+    def __init__(self, SERV):
+        super(USER_DEC, self).__init__(SERV)
+
+    def Execute(self):
+        self.SERV.FSM.ToTransition('To_BIN_TO_ARM')
+
+    def StateName(self):
+        return 'USER_DEC'
 
 
 class BIN_TO_ARM(State):
@@ -270,31 +270,31 @@ class ARM_PICKUP(State):
         return 'ARM_PICKUP'
 
 
-# class PICKUP_CHECK(State):
-
-#     def __init__(self, SERV):
-#         super(PICKUP_CHECK, self).__init__(SERV)
-
-#     def Execute(self):
-#         self.SERV.FSM.ToTransition('To_ARM_DROPPING')
-
-#     def StateName(self):
-#         return 'PICKUP_CHECK'
-
 class PICKUP_CHECK(State):
 
     def __init__(self, SERV):
         super(PICKUP_CHECK, self).__init__(SERV)
 
     def Execute(self):
-        USER_INPUT = self.SERV.UserData()
-        if(USER_INPUT == 'SUCC'):
-            self.SERV.FSM.ToTransition('To_ARM_DROPPING')
-        if(USER_INPUT == 'FAIL'):
-            self.SERV.FSM.ToTransition('To_BIN_AT_ARM')
+        self.SERV.FSM.ToTransition('To_ARM_DROPPING')
 
     def StateName(self):
         return 'PICKUP_CHECK'
+
+# class PICKUP_CHECK(State):
+
+#     def __init__(self, SERV):
+#         super(PICKUP_CHECK, self).__init__(SERV)
+
+#     def Execute(self):
+#         USER_INPUT = self.SERV.UserData()
+#         if(USER_INPUT == 'SUCC'):
+#             self.SERV.FSM.ToTransition('To_ARM_DROPPING')
+#         if(USER_INPUT == 'FAIL'):
+#             self.SERV.FSM.ToTransition('To_BIN_AT_ARM')
+
+#     def StateName(self):
+#         return 'PICKUP_CHECK'
 
 
 class ARM_DROPPING(State):
