@@ -26,9 +26,12 @@ class IDLE(State):
 
     def Execute(self):
         START = self.SERV.StartProcess()
+        MAP_FLAG = self.SERV.MapFlag()
         if(START):
-            # self.SERV.FSM.ToTransition('To_START')
-            self.SERV.FSM.ToTransition('To_MAP_AT_SERVER')
+            if(MAP_FLAG):
+                self.SERV.FSM.ToTransition('To_MAP_AT_SERVER')
+            else:
+                self.SERV.FSM.ToTransition('To_START')
 
     def StateName(self):
         return 'IDLE'
