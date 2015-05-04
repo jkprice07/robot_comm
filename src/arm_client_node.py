@@ -68,17 +68,18 @@ class ArmClientNode:
         self.ARM_BASE_CLIENT.SetPose(str(POSE_DICT))
 
     def ImageCallback(self, DATA):
-        if(self.ARM_CLIENT.ServState() == 'ARM_SEARCH'):
+        CUR_SERV_STATE = self.ARM_CLIENT.ServState()
+        if(CUR_SERV_STATE == 'ARM_SEARCH'):
             if(not self.IMAGE_FLAG):
                 PPM_DATA = RosImageToPPMString(DATA)
                 self.ARM_CLIENT.SendFile(PPM_DATA, 'OBJ')
                 self.IMAGE_FLAG = True
-        elif(self.ARM_CLIENT.ServState() == 'ARM_PICKUP'):
+        elif(CUR_SERV_STATE == 'ARM_PICKUP'):
             if(not self.IMAGE_FLAG):
                 PPM_DATA = RosImageToPPMString(DATA)
                 self.ARM_CLIENT.SendFile(PPM_DATA, 'VER')
                 self.IMAGE_FLAG = True
-        elif:
+        else:
             self.IMAGE_FLAG = None
 
     def WorkCallback(self):
