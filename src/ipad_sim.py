@@ -1,9 +1,11 @@
 import socket
 import os
-from get_address import GetAddress
+from read_settings import *
 
 sock = socket.socket()
-HOST_ADDR = GetAddress()
+IP, MAP, IM = ReadSettings('SERVER')
+PORT = int(raw_input('Enter port:\n'))
+HOST_ADDR = (IP, PORT)
 sock.connect(HOST_ADDR)
 print 'Enter 1 to START,\n\
     2 to signal MAP completion,\n\
