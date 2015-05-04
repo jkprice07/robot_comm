@@ -177,6 +177,7 @@ class ARM_SEARCH(State):
 #            if(OBJ_POSE):
 #                self.SERV.FSM.ToTransition('To_FOUND_OBJ')
 #            else:
+#                self.SERV.SetCount()
 #                self.SERV.FSM.ToTransition('To_RESET')
 #
 #    def StateName(self):
@@ -188,8 +189,6 @@ class USER_DEC(State):
         super(USER_DEC, self).__init__(SERV)
 
     def Execute(self):
-        USER_INPUT = self.SERV.UserData()
-        OBJ_POSE = self.SERV.ObjPose()
         self.SERV.FSM.ToTransition('To_BIN_TO_ARM')
 
     def StateName(self):
@@ -244,8 +243,7 @@ class PICKUP_CHECK(State):
         super(PICKUP_CHECK, self).__init__(SERV)
 
     def Execute(self):
-        USER_INPUT = self.SERV.UserData()
-        self.SERV.FSM.ToTransition('To_ARM_DROPPING')
+            self.SERV.FSM.ToTransition('To_ARM_DROPPING')
 
     def StateName(self):
         return 'PICKUP_CHECK'
@@ -293,6 +291,7 @@ class BIN_TO_BASE(State):
             if(OBJ_POSE):
                 self.SERV.FSM.ToTransition('To_FOUND_OBJ')
             else:
+                self.SERV.SetCount()
                 self.SERV.FSM.ToTransition('To_RESET')
 
     def StateName(self):
@@ -305,7 +304,7 @@ class RESET(State):
         super(RESET, self).__init__(SERV)
 
     def Execute(self):
-        if((self.SERV.ResetCount() + 5) < time()):
+        if((self.SERV.ViewCount() + 5) < time()):
             self.SERV.FSM.ToTransition('To_IDLE')
 
     def StateName(self):

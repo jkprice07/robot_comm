@@ -27,7 +27,6 @@ class ArmClientNode:
         self.ARM_CLIENT = BotClient(HOST_ADDR, 'ARMBOT')
         self.ARM_BASE_CLIENT = BotClient(HOST_ADDR, 'BASEBOT')
         self.IMAGE_FLAG = None
-        self.ARM_CLIENT.SetPose('NO_POSE')
         self.PRINT_FLAG = None
         self.POSE_FLAG = None
         if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
@@ -71,13 +70,13 @@ class ArmClientNode:
     def ImageCallback(self, DATA):
         if(self.ARM_CLIENT.ServState() == 'ARM_SEARCH'):
             if(not self.IMAGE_FLAG):
-                self.IMAGE_FLAG = RosImageToPPMString(DATA)
-                self.ARM_CLIENT.SendFile(self.IMAGE_FLAG, 'OBJ')
+                PPM_DATA = RosImageToPPMString(DATA)
+                self.ARM_CLIENT.SendFile(PPM_DATA, 'OBJ')
                 self.IMAGE_FLAG = True
         elif(self.ARM_CLIENT.ServState() == 'ARM_PICKUP'):
             if(not self.IMAGE_FLAG):
-                self.IMAGE_FLAG = RosImageToPPMString(DATA)
-                self.ARM_CLIENT.SendFile(self.IMAGE_FLAG, 'VER')
+                PPM_DATA = RosImageToPPMString(DATA)
+                self.ARM_CLIENT.SendFile(PPM_DATA, 'VER')
                 self.IMAGE_FLAG = True
 
     def WorkCallback(self):

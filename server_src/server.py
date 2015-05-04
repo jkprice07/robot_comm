@@ -18,6 +18,7 @@ class Server:
     #  Initialised with HOST_ADDR as tuple consisiting of {IP, PORT},
     #  MAP_DIR a string pointing to directory for map files,
     #  IMAGE_DIR a string pointing to directory for image files.
+
     def __init__(self, HOST_ADDR, MAP_DIR, IMAGE_DIR):
         #  Input variables
         self.HOST_ADDR = HOST_ADDR
@@ -39,7 +40,7 @@ class Server:
         self.START_PROCESS = False
         self.SYNC = False
         self.USER_INPUT = None
-        self.RESET_COUNT = 0
+        self.COUNT = 0
         #  Initialise MAP and IMAGE flags.
         self.MAP_FLAG = None
         self.IMAGE_FLAG = None
@@ -230,8 +231,8 @@ class Server:
             #  (.pgm + .yaml).
             elif(MSG == 'SEND_OBJ_PNG'):
                 if(self.IMAGE_FLAG):
-		    DATA = self.ReadFile(self.IMAGE_DIR + 'object_image.png')
-		    self.Send(CONN, 1024, DATA)
+                    DATA = self.ReadFile(self.IMAGE_DIR + 'object_image.png')
+                    self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_VER_PNG'):
                 if(self.IMAGE_FLAG):
@@ -239,10 +240,10 @@ class Server:
                     self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PNG'):
-		if(os.path.isfile(self.MAP_DIR + 'map.png')):
+                if(os.path.isfile(self.MAP_DIR + 'map.png')):
                     DATA = self.ReadFile(self.MAP_DIR + 'map.png')
                     self.Send(CONN, 1024, DATA)
-		elif(os.path.isfile(self.MAP_DIR + 'map.pgm')):
+                elif(os.path.isfile(self.MAP_DIR + 'map.pgm')):
                     FILE = Image.open(self.MAP_DIR + 'map.pgm')
                     FILE.save(self.MAP_DIR + 'map.png')
                     DATA = self.ReadFile(self.MAP_DIR + 'map.png')
@@ -266,7 +267,7 @@ class Server:
                 self.START_PROCESS = True
 
             elif(MSG == 'RESET'):
-                self.RESET_COUNT = time()
+                self.SetCount()
                 self.FSM.SetState('RESET')
 
             elif(MSG == 'INPUT'):
@@ -331,19 +332,19 @@ class Server:
             CON_2 = os.path.isfile(self.IMAGE_DIR + 'verify_image.png')
             self.IMAGE_FLAG = CON_1 or CON_2
             #  Remove image files/reset user input if not in decision state.
-            if((CUR_STATE != 'USER_DEC') and (CUR_STATE != 'PICKUP_CHECK')):
+            if((CUR_STATE != 'ARM_SEARCH') and (CUR_STATE != 'USER_DEC')):
                 if(os.path.isfile(self.IMAGE_DIR + 'object_image.png')):
                     os.remove(self.IMAGE_DIR + 'object_image.png')
+            if((CUR_STATE != 'ARM_PICKUP') and (CUR_STATE != 'PICKUP_CHECK')):
                 if(os.path.isfile(self.IMAGE_DIR + 'verify_image.png')):
                     os.remove(self.IMAGE_DIR + 'verify_image.png')
-                if(CUR_STATE != 'MAPPING_MAN'):
-                    self.USER_INPUT = None
+            if((CUR_STATE != 'USER_DEC') or (CUR_STATE != 'PICKUP_CHECK') or
+                    (CUR_STATE != 'MAPPING_MAN')):
+                self.USER_INPUT = None
             #  Reset pose list and start variable in RESET.
             if(CUR_STATE == 'RESET'):
                 self.START_PROCESS = False
                 self.OBJ_POSE = []
-            else:
-                self.RESET_COUNT = 0
             # self.FSM.Execute()
             sleep(1)
 
@@ -368,8 +369,11 @@ class Server:
     def StartProcess(self):
         return self.START_PROCESS
 
-    def ResetCount(self):
-        return self.RESET_COUNT
+    def ViewCount(self):
+        return self.COUNT
+
+    def SetCount(self):
+        self.COUNT = time()
 
     ################################################
     #  Pops the first item from the OBJ_POSE list,
@@ -477,8 +481,8 @@ class Server:
 
 if __name__ == "__main__":
     PORT = int(raw_input('Enter port:\n'))
-    HOST_ADDR = ('192.168.0.117', PORT)
-    #HOST_ADDR = ('localhost', PORT)
+    #HOST_ADDR = ('192.168.0.117', PORT)
+    HOST_ADDR = ('localhost', PORT)
     MAP_DIR = '/home/hrteam/Documents/map/'
     IMAGE_DIR = '/home/hrteam/Documents/image/'
     SERV = Server(HOST_ADDR, MAP_DIR, IMAGE_DIR)

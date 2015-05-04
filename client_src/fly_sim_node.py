@@ -39,17 +39,17 @@ class FlyNode:
 
         if(CUR_SERV_STATE == 'MAP_AT_SERVER'):
             self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
-		os.path.isfile(self.MAP_DIR + 'map.yaml')
+                os.path.isfile(self.MAP_DIR + 'map.yaml')
             if(not self.MAP_FLAG):
-		self.FLY_CLIENT.RecvMap(self.MAP_DIR)
-		self.MAP_FLAG = True
+                self.FLY_CLIENT.RecvMap(self.MAP_DIR)
+                self.MAP_FLAG = True
         elif(CUR_SERV_STATE == 'RESET'):
             if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
                 os.remove(self.MAP_DIR + 'map.pgm')
             if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
                 os.remove(self.MAP_DIR + 'map.yaml')
             self.MAP_FLAG = None
-			
+
     def Spin(self):
         rate = rospy.Rate(RATE)
         self.FLY_CLIENT.Start()

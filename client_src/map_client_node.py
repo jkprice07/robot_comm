@@ -16,14 +16,15 @@ RATE = 2
 
 class MapClientNode:
 
-    def __init__(self, HOST_ADDR):
+    def __init__(self, HOST_ADDR, MAP_DIR):
         self.HOST_ADDR = HOST_ADDR
+        self.MAP_DIR = MAP_DIR
         self.MAP_CLIENT = BotClient(HOST_ADDR, 'MAPBOT')
         self.PRINT_FLAG = None
-	if(os.path.isfile('/home/map.pgm')):
-            os.remove('/home/map.pgm')
-        if(os.path.isfile('/home/map.yaml')):
-            os.remove('/home/map.yaml')
+        if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
+            os.remove(self.MAP_DIR + 'map.pgm')
+        if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
+            os.remove(self.MAP_DIR + 'map.yaml')
         self.MAP_FLAG = None
         # Subscriptions
         rospy.Subscriber('/map_bot_base/state', String, self.MapStateCallback)
@@ -54,19 +55,38 @@ class MapClientNode:
 
         if(CUR_SERV_STATE == 'MAP_DONE'):
             if(not self.MAP_FLAG):
-                subprocess.call('rosrun map_server map_saver -f map',  shell=True)
-                FILE = open('/home/smartmap.yaml', 'rb')
-                DATA = FILE.read()
-                FILE.close()
-                self.MAP_CLIENT.SendFile(DATA, 'MAP_YAML')
-                FILE = open('/home/map.pgm', 'rb')
-                DATA = DATA + FILE.read()
-                FILE.close()
-                self.MAP_CLIENT.SendFile(DATA, 'MAP_PGM')
+                subprocess.call('rosrun map_server \
+                    map_saver -f map',  shell=True)
+                YAML_DATA = self.ReadFile(self.MAP_DIR + 'map.yaml')
+                YAML_DATA = self.FixYAML(YAML_DATA)
+                self.MAP_CLIENT.SendFile(YAML_DATA, 'MAP_YAML')
+                PGM_DATA = self.ReadFile(self.MAP_DIR + 'map.pgm')
+                self.MAP_CLIENT.SendFile(PGM_DATA, 'MAP_PGM')
                 self.MAP_FLAG = True
         else:
-            self.MAP_FLAG = os.path.isfile('/home/map.pgm') and \
-            	os.path.isfile('/home/map.yaml')
+            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
+                os.path.isfile(self.MAP_DIR + 'map.yaml')
+
+    def FixYAML(self, DATA):
+        if(DATA):
+            i = 0
+            while(True):
+                CHAR = DATA[i]
+                i = i + 1
+                if(CHAR == '\n'):
+                    break
+            return 'image: map.pgm\n' + DATA[i:len(DATA)]
+        else:
+            return None
+
+    def ReadFile(self, PATH):
+        try:
+            FILE = open(PATH, 'rb')
+            DATA = FILE.read()
+            FILE.close()
+            return DATA
+        except:
+            return None
 
     def Spin(self):
         self.MAP_CLIENT.Start()
@@ -81,5 +101,6 @@ if __name__ == "__main__":
     print 'Enter port: '
     PORT = int(raw_input(''))
     HOST_ADDR = ('192.168.0.117', PORT)
-    CLIENT_NODE = MapClientNode(HOST_ADDR)
+    MAP_DIR = '/home/smartlab-tb01/'
+    CLIENT_NODE = MapClientNode(HOST_ADDR, MAP_DIR)
     CLIENT_NODE.Spin()

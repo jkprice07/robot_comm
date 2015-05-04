@@ -4,7 +4,7 @@ sock = socket.socket()
 print 'Enter port:'
 PORT = int(raw_input(''))
 HOST_ADDR = ('192.168.0.117', PORT)
-#HOST_ADDR = ('localhost', PORT)
+HOST_ADDR = ('localhost', PORT)
 sock.connect(HOST_ADDR)
 print 'Enter 1 to START,\n\
     2 to signal MAP completion,\n\

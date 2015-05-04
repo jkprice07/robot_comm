@@ -42,12 +42,12 @@ class BotClient:
                     self.STATE + '#' + self.POSE + '#'
                 self.Send(SOCK, 1, DATA)
                 self.SERV_STATE = self.Recv(SOCK, 32)
-                time.sleep(0.5)
+                time.sleep(0.1)
                 SOCK.close()
             except socket.timeout:
                 logging.info('Cannot connect, re-establishing \
                     connection to server...')
-                time.sleep(0.5)
+                time.sleep(0.1)
         logging.info('Synchronization stopped.')
 
     def Recv(self, CONN, PACK_SIZE):
