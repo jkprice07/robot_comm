@@ -306,6 +306,7 @@ class ARM_DROPPING(State):
         BOT_DATA = self.SERV.BotData()
         if(BOT_DATA['STATES']['ARMBOT'] == 'DROPPED'):
             self.SERV.PopObjPose()
+            self.SERV.SetCount()
             self.SERV.FSM.ToTransition('To_BIN_TO_BASE')
 
     def StateName(self):
@@ -322,7 +323,8 @@ class BIN_TO_BASE(State):
         OBJ_POSE = self.SERV.ObjPose()
         if(BOT_DATA['STATES']['BINBOT'] == 'FSM_MOVE_TO_BASE'):
             if(OBJ_POSE):
-                self.SERV.FSM.ToTransition('To_FOUND_OBJ')
+                if(self.SERV.ViewCount() + 20 < time()):
+                    self.SERV.FSM.ToTransition('To_FOUND_OBJ')
             else:
                 self.SERV.SetCount()
                 self.SERV.FSM.ToTransition('To_RESET')
