@@ -13,7 +13,8 @@ while(True):
         2 to signal MAP completion,\n\
         3 to decide on PICKUP,\n\
         4 to VERIFY successful pickup,\n\
-        5 to RESET.'
+        5 to RESET,\n\
+        6 to QUIT.'
     ACTION = raw_input('')
     if(ACTION == '1'):
         sock.send('START#')
