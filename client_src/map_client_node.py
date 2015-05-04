@@ -5,7 +5,7 @@
 import rospy
 import subprocess
 import os
-from get_address import GetAddress
+from read_settings import *
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
@@ -22,10 +22,10 @@ class MapClientNode:
         self.MAP_DIR = MAP_DIR
         self.MAP_CLIENT = BotClient(HOST_ADDR, 'MAPBOT')
         self.PRINT_FLAG = None
-        if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
-            os.remove(self.MAP_DIR + 'map.pgm')
-        if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
-            os.remove(self.MAP_DIR + 'map.yaml')
+        if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+            os.remove(self.MAP_DIR + '/map.pgm')
+        if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
+            os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
         # Subscriptions
         rospy.Subscriber('/map_bot_base/state', String, self.MapStateCallback)
@@ -58,15 +58,15 @@ class MapClientNode:
             if(not self.MAP_FLAG):
                 subprocess.call('rosrun map_server \
                     map_saver -f map',  shell=True)
-                YAML_DATA = self.ReadFile(self.MAP_DIR + 'map.yaml')
+                YAML_DATA = self.ReadFile(self.MAP_DIR + '/map.yaml')
                 YAML_DATA = self.FixYAML(YAML_DATA)
                 self.MAP_CLIENT.SendFile(YAML_DATA, 'MAP_YAML')
-                PGM_DATA = self.ReadFile(self.MAP_DIR + 'map.pgm')
+                PGM_DATA = self.ReadFile(self.MAP_DIR + '/map.pgm')
                 self.MAP_CLIENT.SendFile(PGM_DATA, 'MAP_PGM')
                 self.MAP_FLAG = True
         else:
-            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
-                os.path.isfile(self.MAP_DIR + 'map.yaml')
+            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
+                os.path.isfile(self.MAP_DIR + '/map.yaml')
 
     def FixYAML(self, DATA):
         if(DATA):
@@ -99,7 +99,8 @@ class MapClientNode:
 
 if __name__ == "__main__":
     rospy.init_node('map_client_node')
-    HOST_ADDR = GetAddress()
-    MAP_DIR = '/home/smartlab-tb01/'
+    IP, MAP_DIR = ReadSettings('MAPBOT')
+    PORT = int(raw_input('Enter port:\n'))
+    HOST_ADDR = (IP, PORT)
     CLIENT_NODE = MapClientNode(HOST_ADDR, MAP_DIR)
     CLIENT_NODE.Spin()

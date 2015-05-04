@@ -6,7 +6,7 @@ import socket
 import threading
 import ast
 import os
-from get_address import GetAddress
+from read_settings import *
 from time import sleep, time
 from PIL import Image
 from fsm import FSM
@@ -151,22 +151,22 @@ class Server:
             ##########################################################
             #  Message handlers for receiving files (map and images).
             if(MSG == 'RECV_OBJ_IM'):
-                self.RecvFile(CONN, 32, self.IMAGE_DIR + 'object_image.ppm')
-                FILE = Image.open(self.IMAGE_DIR + 'object_image.ppm')
-                FILE.save(self.IMAGE_DIR + 'object_image.png')
+                self.RecvFile(CONN, 32, self.IMAGE_DIR + '/object_image.ppm')
+                FILE = Image.open(self.IMAGE_DIR + '/object_image.ppm')
+                FILE.save(self.IMAGE_DIR + '/object_image.png')
 
             elif(MSG == 'RECV_VER_IM'):
-                self.RecvFile(CONN, 32, self.IMAGE_DIR + 'verify_image.ppm')
-                FILE = Image.open(self.IMAGE_DIR + 'verify_image.ppm')
-                FILE.save(self.IMAGE_DIR + 'verify_image.png')
+                self.RecvFile(CONN, 32, self.IMAGE_DIR + '/verify_image.ppm')
+                FILE = Image.open(self.IMAGE_DIR + '/verify_image.ppm')
+                FILE.save(self.IMAGE_DIR + '/verify_image.png')
 
             elif(MSG == 'RECV_MAP_PGM'):
-                self.RecvFile(CONN, 32, self.MAP_DIR + 'map.pgm')
-                FILE = Image.open(self.MAP_DIR + 'map.pgm')
-                FILE.save(self.MAP_DIR + 'map.png')
+                self.RecvFile(CONN, 32, self.MAP_DIR + '/map.pgm')
+                FILE = Image.open(self.MAP_DIR + '/map.pgm')
+                FILE.save(self.MAP_DIR + '/map.png')
 
             elif(MSG == 'RECV_MAP_YAML'):
-                self.RecvFile(CONN, 32, self.MAP_DIR + 'map.yaml')
+                self.RecvFile(CONN, 32, self.MAP_DIR + '/map.yaml')
 
             ##############################################################
             #  Message handlers for robot state/pose and server state data
@@ -230,32 +230,32 @@ class Server:
             #  (.pgm + .yaml).
             elif(MSG == 'SEND_OBJ_PNG'):
                 if(self.IMAGE_FLAG):
-                    DATA = self.ReadFile(self.IMAGE_DIR + 'object_image.png')
+                    DATA = self.ReadFile(self.IMAGE_DIR + '/object_image.png')
                     self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_VER_PNG'):
                 if(self.IMAGE_FLAG):
-                    DATA = self.ReadFile(self.IMAGE_DIR + 'verify_image.png')
+                    DATA = self.ReadFile(self.IMAGE_DIR + '/verify_image.png')
                     self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PNG'):
-                if(os.path.isfile(self.MAP_DIR + 'map.png')):
-                    DATA = self.ReadFile(self.MAP_DIR + 'map.png')
+                if(os.path.isfile(self.MAP_DIR + '/map.png')):
+                    DATA = self.ReadFile(self.MAP_DIR + '/map.png')
                     self.Send(CONN, 1024, DATA)
-                elif(os.path.isfile(self.MAP_DIR + 'map.pgm')):
-                    FILE = Image.open(self.MAP_DIR + 'map.pgm')
-                    FILE.save(self.MAP_DIR + 'map.png')
-                    DATA = self.ReadFile(self.MAP_DIR + 'map.png')
+                elif(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+                    FILE = Image.open(self.MAP_DIR + '/map.pgm')
+                    FILE.save(self.MAP_DIR + '/map.png')
+                    DATA = self.ReadFile(self.MAP_DIR + '/map.png')
                     self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PGM'):
                 if(self.MAP_FLAG):
-                    DATA = self.ReadFile(self.MAP_DIR + 'map.pgm')
+                    DATA = self.ReadFile(self.MAP_DIR + '/map.pgm')
                     self.Send(CONN, 32, DATA)
 
             elif(MSG == 'SEND_MAP_YAML'):
                 if(self.MAP_FLAG):
-                    DATA = self.ReadFile(self.MAP_DIR + 'map.yaml')
+                    DATA = self.ReadFile(self.MAP_DIR + '/map.yaml')
                     self.Send(CONN, 32, DATA)
 
             ##############################################################
@@ -323,22 +323,22 @@ class Server:
                 self.DATA['STATES']['MAPBOT'] = 'NONE'
                 self.DATA['POSES']['MAPBOT'] = 'NONE'
             #  Set map flag (check for .pgm and .yaml).
-            CON_1 = os.path.isfile(self.MAP_DIR + 'map.pgm')
-            CON_2 = os.path.isfile(self.MAP_DIR + 'map.yaml')
+            CON_1 = os.path.isfile(self.MAP_DIR + '/map.pgm')
+            CON_2 = os.path.isfile(self.MAP_DIR + '/map.yaml')
             self.MAP_FLAG = CON_1 and CON_2
             #  Set image flag (check for png's in image dir).
-            CON_1 = os.path.isfile(self.IMAGE_DIR + 'object_image.png')
-            CON_2 = os.path.isfile(self.IMAGE_DIR + 'verify_image.png')
+            CON_1 = os.path.isfile(self.IMAGE_DIR + '/object_image.png')
+            CON_2 = os.path.isfile(self.IMAGE_DIR + '/verify_image.png')
             self.IMAGE_FLAG = CON_1 or CON_2
             #  Remove image files/reset user input if not in decision state.
             if((CUR_STATE != 'ARM_SEARCH') and (CUR_STATE != 'USER_DEC')):
-                if(os.path.isfile(self.IMAGE_DIR + 'object_image.png')):
-                    os.remove(self.IMAGE_DIR + 'object_image.ppm')
-                    os.remove(self.IMAGE_DIR + 'object_image.png')
+                if(os.path.isfile(self.IMAGE_DIR + '/object_image.png')):
+                    os.remove(self.IMAGE_DIR + '/object_image.ppm')
+                    os.remove(self.IMAGE_DIR + '/object_image.png')
             if((CUR_STATE != 'ARM_PICKUP') and (CUR_STATE != 'PICKUP_CHECK')):
-                if(os.path.isfile(self.IMAGE_DIR + 'verify_image.png')):
-                    os.remove(self.IMAGE_DIR + 'verify_image.ppm')
-                    os.remove(self.IMAGE_DIR + 'verify_image.png')
+                if(os.path.isfile(self.IMAGE_DIR + '/verify_image.png')):
+                    os.remove(self.IMAGE_DIR + '/verify_image.ppm')
+                    os.remove(self.IMAGE_DIR + '/verify_image.png')
             if((CUR_STATE != 'USER_DEC') and (CUR_STATE != 'PICKUP_CHECK') and
                     (CUR_STATE != 'MAPPING_MAN')):
                 self.USER_INPUT = None
@@ -481,10 +481,9 @@ class Server:
         FILE.close()
 
 if __name__ == "__main__":
-    HOST_ADDR = GetAddress()
-    print (HOST_ADDR)
-    MAP_DIR = '/home/hrteam/Documents/map/'
-    IMAGE_DIR = '/home/hrteam/Documents/image/'
+    IP, MAP_DIR, IMAGE_DIR = ReadSettings('SERVER')
+    PORT = int(raw_input('Enter port:\n'))
+    HOST_ADDR = (IP, PORT)
     SERV = Server(HOST_ADDR, MAP_DIR, IMAGE_DIR)
     SERV.Run()
     sleep(2)

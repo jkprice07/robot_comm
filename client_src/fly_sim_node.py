@@ -4,7 +4,7 @@
 
 import rospy
 import os
-from get_address import GetAddress
+from read_settings import *
 from clientclass import BotClient
 from move_base_msgs.msg import *
 from geometry_msgs.msg import PoseStamped
@@ -19,10 +19,10 @@ class FlyNode:
         self.FLY_CLIENT = BotClient(HOST_ADDR, 'FLYBOT')
         self.MAP_DIR = MAP_DIR
         self.PRINT_FLAG = None
-        if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
-            os.remove(self.MAP_DIR + 'map.pgm')
-        if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
-            os.remove(self.MAP_DIR + 'map.yaml')
+        if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+            os.remove(self.MAP_DIR + '/map.pgm')
+        if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
+            os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
         self.RVIZ_POSE = rospy.Subscriber('/move_base_simple/goal',
                                           PoseStamped, self.PoseCallback)
@@ -39,16 +39,16 @@ class FlyNode:
             rospy.loginfo(self.PRINT_FLAG)
 
         if(CUR_SERV_STATE == 'MAP_AT_SERVER'):
-            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
-                os.path.isfile(self.MAP_DIR + 'map.yaml')
+            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
+                os.path.isfile(self.MAP_DIR + '/map.yaml')
             if(not self.MAP_FLAG):
                 self.FLY_CLIENT.RecvMap(self.MAP_DIR)
                 self.MAP_FLAG = True
         elif(CUR_SERV_STATE == 'RESET'):
-            if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
-                os.remove(self.MAP_DIR + 'map.pgm')
-            if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
-                os.remove(self.MAP_DIR + 'map.yaml')
+            if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+                os.remove(self.MAP_DIR + '/map.pgm')
+            if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
+                os.remove(self.MAP_DIR + '/map.yaml')
             self.MAP_FLAG = None
 
     def Spin(self):
@@ -61,7 +61,8 @@ class FlyNode:
 
 if __name__ == '__main__':
     rospy.init_node('fly_sim_node')
-    HOST_ADDR = GetAddress()
-    MAP_DIR = '/home/hrteam/Documents/map_recv/'
+    IP, MAP_DIR = ReadSettings('FLYBOT')
+    PORT = int(raw_input('Enter port:\n'))
+    HOST_ADDR = (IP, PORT)
     FLY = FlyNode(HOST_ADDR, MAP_DIR)
     FLY.Spin()

@@ -7,7 +7,7 @@ import time
 import threading
 import ast
 import os
-from get_address import GetAddress
+from read_settings import *
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
@@ -29,10 +29,10 @@ class ArmClientNode:
         self.IMAGE_FLAG = None
         self.PRINT_FLAG = None
         self.POSE_FLAG = None
-        if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
-            os.remove(self.MAP_DIR + 'map.pgm')
-        if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
-            os.remove(self.MAP_DIR + 'map.yaml')
+        if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+            os.remove(self.MAP_DIR + '/map.pgm')
+        if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
+            os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
         # Subscriptions
         rospy.Subscriber('/uarm/state',
@@ -109,8 +109,8 @@ class ArmClientNode:
                 self.ARM_CLIENT.RecvMap(self.MAP_DIR)
                 self.MAP_FLAG = True
         else:
-            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
-                os.path.isfile(self.MAP_DIR + 'map.yaml')
+            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
+                os.path.isfile(self.MAP_DIR + '/map.yaml')
 
     def Spin(self):
         self.ARM_CLIENT.Start()
@@ -125,7 +125,8 @@ class ArmClientNode:
 
 if __name__ == "__main__":
     rospy.init_node('arm_client_node')
-    HOST_ADDR = GetAddress()
-    MAP_DIR = '/home/jason/map/'
+    IP, MAP_DIR = ReadSettings('ARMBOT')
+    PORT = int(raw_input('Enter port:\n'))
+    HOST_ADDR = (IP, PORT)
     CLIENT_NODE = ArmClientNode(HOST_ADDR, MAP_DIR)
     CLIENT_NODE.Spin()

@@ -1,0 +1,7 @@
+HOST:    192.168.0.21
+S_MAP:   /home/hrteam/Documents/map_files
+S_IM:    /home/hrteam/Documents/image_files
+ARM_MAP: /home/jason/map
+BIN_MAP: /home/sglvladi/map
+MAP_MAP: /home/smartlab-tb01
+FLY_MAP: /home/hrteam/Documents/map_recv

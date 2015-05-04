@@ -8,7 +8,7 @@ import threading
 import ast
 import logging
 import os
-from get_address import GetAddress
+from read_settings import *
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
@@ -26,10 +26,10 @@ class BinClientNode:
         self.BIN_CLIENT = BotClient(HOST_ADDR, 'BINBOT')
         self.PRINT_FLAG = None
         self.POSE_FLAG = None
-        if(os.path.isfile(self.MAP_DIR + 'map.pgm')):
-            os.remove(self.MAP_DIR + 'map.pgm')
-        if(os.path.isfile(self.MAP_DIR + 'map.yaml')):
-            os.remove(self.MAP_DIR + 'map.yaml')
+        if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+            os.remove(self.MAP_DIR + '/map.pgm')
+        if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
+            os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
         # Subscriptions
         rospy.Subscriber('/bin_bot_base/state', String, self.BinStateCallback)
@@ -81,8 +81,8 @@ class BinClientNode:
                 self.BIN_CLIENT.RecvMap(self.MAP_DIR)
                 self.MAP_FLAG = True
         else:
-            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + 'map.pgm') and \
-                os.path.isfile(self.MAP_DIR + 'map.yaml')
+            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
+                os.path.isfile(self.MAP_DIR + '/map.yaml')
 
     # Spin function to call work callback while ros running
     # and start/stop client synchronization
@@ -96,7 +96,8 @@ class BinClientNode:
 
 if __name__ == "__main__":
     rospy.init_node('bin_client_node')
-    HOST_ADDR = GetAddress()
-    MAP_DIR = '/home/sglvladi/map/'
+    IP, MAP_DIR = ReadSettings('BINBOT')
+    PORT = int(raw_input('Enter port:\n'))
+    HOST_ADDR = (IP, PORT)
     CLIENT_NODE = BinClientNode(HOST_ADDR, MAP_DIR)
     CLIENT_NODE.Spin()

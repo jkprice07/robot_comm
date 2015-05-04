@@ -90,13 +90,13 @@ class BotClient:
         SOCK_0.connect(self.HOST_ADDR)
         SOCK_0.send('SEND_MAP_PGM#')
         THREAD_0 = threading.Thread(target=self.RecvFile,
-                                    args=(SOCK_0, 32, DEST + 'map.pgm'))
+                                    args=(SOCK_0, 32, DEST + '/map.pgm'))
         THREAD_0.start()
         SOCK_1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         SOCK_1.connect(self.HOST_ADDR)
         SOCK_1.send('SEND_MAP_YAML#')
         THREAD_1 = threading.Thread(target=self.RecvFile,
-                                    args=(SOCK_1, 32, DEST + 'map.yaml'))
+                                    args=(SOCK_1, 32, DEST + '/map.yaml'))
         THREAD_1.start()
 
     def SendFile(self, DATA, TYPE):
@@ -146,9 +146,4 @@ class BotClient:
         return self.STATE
 
 if __name__ == "__main__":
-    PORT = int(raw_input('Enter port:\n'))
-    #HOST_ADDR = ('192.168.0.109', PORT)
-    HOST_ADDR = ('localhost', PORT)
-    CLIENT = BotClient(HOST_ADDR, 'MAPBOT')
-    CLIENT.SetState('FSM_MANUAL')
-    CLIENT.Start()
+    pass
