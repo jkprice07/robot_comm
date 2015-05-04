@@ -143,23 +143,21 @@ class Server:
     #  Message handling for the server.  Each client spawns a thread of
     #  `ClientConn' to read the socket data and respond appropriately.
     def ClientConn(self, CONN, ADDR):
-        CONN.settimeout(10)
+        CONN.settimeout(15)
         try:
             MSG = self.RecvLine(CONN)
 
-            #########################################################
-            #  Message handlers for receiving files (map and images)
+            ##########################################################
+            #  Message handlers for receiving files (map and images).
             if(MSG == 'RECV_OBJ_IM'):
                 self.RecvFile(CONN, 32, self.IMAGE_DIR + 'object_image.ppm')
                 FILE = Image.open(self.IMAGE_DIR + 'object_image.ppm')
                 FILE.save(self.IMAGE_DIR + 'object_image.png')
-                os.remove(self.IMAGE_DIR + 'object_image.ppm')
 
             elif(MSG == 'RECV_VER_IM'):
                 self.RecvFile(CONN, 32, self.IMAGE_DIR + 'verify_image.ppm')
                 FILE = Image.open(self.IMAGE_DIR + 'verify_image.ppm')
                 FILE.save(self.IMAGE_DIR + 'verify_image.png')
-                os.remove(self.IMAGE_DIR + 'verify_image.ppm')
 
             elif(MSG == 'RECV_MAP_PGM'):
                 self.RecvFile(CONN, 32, self.MAP_DIR + 'map.pgm')
@@ -334,11 +332,13 @@ class Server:
             #  Remove image files/reset user input if not in decision state.
             if((CUR_STATE != 'ARM_SEARCH') and (CUR_STATE != 'USER_DEC')):
                 if(os.path.isfile(self.IMAGE_DIR + 'object_image.png')):
+                    os.remove(self.IMAGE_DIR + 'object_image.ppm')
                     os.remove(self.IMAGE_DIR + 'object_image.png')
             if((CUR_STATE != 'ARM_PICKUP') and (CUR_STATE != 'PICKUP_CHECK')):
                 if(os.path.isfile(self.IMAGE_DIR + 'verify_image.png')):
+                    os.remove(self.IMAGE_DIR + 'verify_image.ppm')
                     os.remove(self.IMAGE_DIR + 'verify_image.png')
-            if((CUR_STATE != 'USER_DEC') or (CUR_STATE != 'PICKUP_CHECK') or
+            if((CUR_STATE != 'USER_DEC') and (CUR_STATE != 'PICKUP_CHECK') and
                     (CUR_STATE != 'MAPPING_MAN')):
                 self.USER_INPUT = None
             #  Reset pose list and start variable in RESET.

@@ -6,7 +6,6 @@ import rospy
 import time
 import threading
 import ast
-import logging
 import os
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import String
