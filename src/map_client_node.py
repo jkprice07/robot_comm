@@ -23,10 +23,10 @@ class MapClientNode:
         self.MAP_DIR = MAP_DIR
         self.MAP_CLIENT = BotClient(HOST_ADDR, 'MAPBOT')
         self.PRINT_FLAG = None
-        if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
-            os.remove(self.MAP_DIR + '/map.pgm')
-        if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
-            os.remove(self.MAP_DIR + '/map.yaml')
+        #if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+        #    os.remove(self.MAP_DIR + '/map.pgm')
+        #if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
+        #    os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
         # Subscriptions
         rospy.Subscriber('/map_bot_base/state', String, self.MapStateCallback)
@@ -101,7 +101,9 @@ class MapClientNode:
 
 if __name__ == "__main__":
     rospy.init_node('map_client_node')
-    IP, MAP_DIR = ReadSettings('MAPBOT')
+    #IP, MAP_DIR = ReadSettings('MAPBOT')
+    IP = '192.168.0.117'
+    MAP_DIR = '/home/smartlab-tb01/catkin_ws_hydro/src/robot_comm'
     PORT = int(raw_input('Enter port:\n'))
     HOST_ADDR = (IP, PORT)
     CLIENT_NODE = MapClientNode(HOST_ADDR, MAP_DIR)
