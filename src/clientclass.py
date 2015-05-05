@@ -55,6 +55,7 @@ class BotClient:
         logging.info('Synchronization stopped.')
         
     def DataTimeout(self):
+        TIMEOUT = 5
         while(self.SERV_SYNC):
             CUR_TIME = time()
             if(CUR_TIME > (self.STATE_TIME + TIMEOUT)):
