@@ -19,7 +19,11 @@ RATE = 10
 
 
 class BinClientNode:
-
+    
+    ######################################################
+    #  Initialise client with server address HOST_ADDR and 
+    #  map file directory MAP_DIR.  Any exisiting map files
+    #  are deleted on startup.
     def __init__(self, HOST_ADDR, MAP_DIR):
         self.HOST_ADDR = HOST_ADDR
         self.MAP_DIR = MAP_DIR
@@ -31,51 +35,72 @@ class BinClientNode:
         if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
             os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
-        # Subscriptions
-        rospy.Subscriber('/bin_bot_base/state', String, self.BinStateCallback)
-        rospy.Subscriber(
-            '/amcl_pose', PoseWithCovarianceStamped, self.BinPoseCallback)
-        # Publications
-        self.POSE_TOPIC = rospy.Publisher('/bin_bot_base/goal', PoseStamped)
-        self.SERV_STATE = rospy.Publisher('/client_node/serv_state', String)
-
-    # State callback
+        #  Subscriptions for BIN state and BIN pose.
+        rospy.Subscriber('/bin_bot_base/state',
+                         String,
+                         self.BinStateCallback)
+        rospy.Subscriber('/amcl_pose',
+                         PoseWithCovarianceStamped,
+                         self.BinPoseCallback)
+        #  Publications for server state and object pose goal.
+        self.POSE_TOPIC = rospy.Publisher('/bin_bot_base/goal',
+                                          PoseStamped)
+        self.SERV_STATE = rospy.Publisher('/client_node/serv_state',
+                                          String)
+   
+    #######################################
+    #  Updates BIN state in client.
     def BinStateCallback(self, DATA):
         self.BIN_CLIENT.SetState(DATA.data)
 
-    # Pose callback (w/ conversion to euler)
+    ###############################################
+    #  Updates BIN pose in client.  Converts pose
+    #  to a dictionary, converts the data to euler
+    #  co-ords from quaternion and send to server.
     def BinPoseCallback(self, DATA):
+        # POSE_DICT = PoseCovarianceToDict(DATA)
+        # QUAT = [POSE_DICT['pose']['orientation']['x'],
+        #         POSE_DICT['pose']['orientation']['y'],
+        #         POSE_DICT['pose']['orientation']['z'],
+        #         POSE_DICT['pose']['orientation']['w']]
+        # EUL = euler_from_quaternion(QUAT)
+        # POSE_DICT = QuaternionToEulerDict(POSE_DICT, EUL)
+        # self.BIN_CLIENT.SetPose(str(POSE_DICT))
         POSE_DICT = PoseCovarianceToDict(DATA)
-        QUAT = [POSE_DICT['pose']['orientation']['x'],
-                POSE_DICT['pose']['orientation']['y'],
-                POSE_DICT['pose']['orientation']['z'],
-                POSE_DICT['pose']['orientation']['w']]
-        EUL = euler_from_quaternion(QUAT)
-        POSE_DICT = QuaternionToEulerDict(POSE_DICT, EUL)
-        self.BIN_CLIENT.SetPose(str(POSE_DICT))
+        POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT))
+        self.BIN_CLIENT.SetPose(POSE_DICT_STRING)
 
-    # Work callback, executed at RATE (defined at top)
+    ####################################################
+    #  Work callback, executed at RATE (defined at top).
     def WorkCallback(self):
+        #  Publish current server state.
         CUR_SERV_STATE = self.BIN_CLIENT.ServState()
         self.SERV_STATE.publish(CUR_SERV_STATE)
-        # Display server state transitions in client console (debugging)
+        #  Display current server state (if updated).
         if(self.PRINT_FLAG != CUR_SERV_STATE):
             self.PRINT_FLAG = CUR_SERV_STATE
             rospy.loginfo(self.PRINT_FLAG)
-
+        #  When object is to be retrieved (server state BIN_TO_ARM),
+        #  an object pose is downloaded, converted to PoseStamped()
+        #  message type and published to necessary ROS topic.
         if(CUR_SERV_STATE == 'BIN_TO_ARM'):
             if(not self.POSE_FLAG):
                 POSE_STRING = self.BIN_CLIENT.RecvPose('OBJ')
                 rospy.loginfo('POSE: ' + POSE_STRING)
                 if(isinstance(POSE_STRING, str)):
-                    self.POSE_FLAG = True
+                    # POSE_DICT = ast.literal_eval(POSE_STRING)
+                    # ROS_POSE = PoseStamped()
+                    # ROS_POSE = DictToPoseStamped(ROS_POSE, POSE_DICT)
+                    # self.POSE_TOPIC.publish(ROS_POSE)
+                    # self.POSE_FLAG = True
                     POSE_DICT = ast.literal_eval(POSE_STRING)
-                    ROS_POSE = PoseStamped()
-                    ROS_POSE = DictToPoseStamped(ROS_POSE, POSE_DICT)
-                    self.POSE_TOPIC.publish(ROS_POSE)
+                    POSE_STAMPED = DictToPoseStamped(POSE_DICT)
+                    self.POSE_TOPIC.publish(POSE_STAMPED)
+                    self.POSE_FLAG = True
         else:
             self.POSE_FLAG = None
-
+        #  If no map present, check server state for MAP_AT_SERVER
+        #  and download to MAP_DIR if it's available from server.
         if(CUR_SERV_STATE == 'MAP_AT_SERVER'):
             if(not self.MAP_FLAG):
                 self.BIN_CLIENT.RecvMap(self.MAP_DIR)
@@ -84,8 +109,9 @@ class BinClientNode:
             self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
                 os.path.isfile(self.MAP_DIR + '/map.yaml')
 
-    # Spin function to call work callback while ros running
-    # and start/stop client synchronization
+    ####################################################
+    #  Spin function starts/stops ARM and BASE clients 
+    #  and executes Work Callback at desired RATE.
     def Spin(self):
         self.BIN_CLIENT.Start()
         rate = rospy.Rate(RATE)
