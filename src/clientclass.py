@@ -120,7 +120,7 @@ class BotClient:
             return None
             
     ##################################################
-    #  Receive 2 map files, `map.pgm' and `map/yaml',
+    #  Receive 2 map files, `map.pgm' and `map.yaml',
     #  saving in directory specified by DEST.  Using 
     #  threads to avoid holding up program.
     def RecvMap(self, DEST):
