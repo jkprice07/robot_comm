@@ -15,7 +15,7 @@ from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from clientclass import BotClient
 from pose_dict_tf import *
 
-RATE = 10
+RATE = 5
 
 
 class BinClientNode:
