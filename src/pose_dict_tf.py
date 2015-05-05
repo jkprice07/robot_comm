@@ -1,3 +1,6 @@
+from tf.transformations import euler_from_quaternion, quaternion_from_euler
+
+
 def PoseStampedToDict(POSE_IN):
     POSE_DICT = {}
     POSE_DICT['header'] = {}
@@ -53,7 +56,22 @@ def DictToPoseStamped(POSE, DICT_IN):
     return POSE_ACT
 
 
-def QuaternionToEulerDict(DICT_IN, EUL):
+# def QuaternionToEulerDict(DICT_IN, EUL):
+#     TF_DICT = {}
+#     TF_DICT['pose'] = {}
+#     TF_DICT['pose']['orientation'] = {}
+#     TF_DICT['pose']['orientation']['roll'] = EUL[0]
+#     TF_DICT['pose']['orientation']['pitch'] = EUL[1]
+#     TF_DICT['pose']['orientation']['yaw'] = EUL[2]
+#     DICT_IN['pose']['orientation'] = TF_DICT['pose']['orientation']
+#     return DICT_IN
+
+def QuaternionToEulerDict(DICT_IN):
+    QUAT = [DICT_IN['pose']['orientation']['x'],
+            DICT_IN['pose']['orientation']['y'],
+            DICT_IN['pose']['orientation']['z'],
+            DICT_IN['pose']['orientation']['w']]
+    EUL = euler_from_quaternion(QUAT)
     TF_DICT = {}
     TF_DICT['pose'] = {}
     TF_DICT['pose']['orientation'] = {}
@@ -62,9 +80,12 @@ def QuaternionToEulerDict(DICT_IN, EUL):
     TF_DICT['pose']['orientation']['yaw'] = EUL[2]
     DICT_IN['pose']['orientation'] = TF_DICT['pose']['orientation']
     return DICT_IN
-
-
-def EulerToQuaternionDict(DICT_IN, QUAT):
+    
+def EulerToQuaternionDict(DICT_IN):
+    EUL = DICT_IN['pose']['orientation']['yaw'],
+          DICT_IN['pose']['orientation']['pitch'],
+          DICT_IN['pose']['orientation']['roll']
+    QUAT = quaternion_from_euler(EUL)
     TF_DICT = {}
     TF_DICT['pose'] = {}
     TF_DICT['pose']['orientation'] = {}
@@ -74,3 +95,14 @@ def EulerToQuaternionDict(DICT_IN, QUAT):
     TF_DICT['pose']['orientation']['w'] = QUAT[3]
     DICT_IN['pose']['orientation'] = TF_DICT['pose']['orientation']
     return DICT_IN
+
+# def EulerToQuaternionDict(DICT_IN, QUAT):
+#     TF_DICT = {}
+#     TF_DICT['pose'] = {}
+#     TF_DICT['pose']['orientation'] = {}
+#     TF_DICT['pose']['orientation']['x'] = QUAT[0]
+#     TF_DICT['pose']['orientation']['y'] = QUAT[1]
+#     TF_DICT['pose']['orientation']['z'] = QUAT[2]
+#     TF_DICT['pose']['orientation']['w'] = QUAT[3]
+#     DICT_IN['pose']['orientation'] = TF_DICT['pose']['orientation']
+#     return DICT_IN
