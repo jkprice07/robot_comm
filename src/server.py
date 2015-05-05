@@ -150,30 +150,10 @@ class Server:
         try:
             MSG = self.RecvLine(CONN)
 
-            ##########################################################
-            #  Message handlers for receiving files (map and images).
-            if(MSG == 'RECV_OBJ_IM'):
-                self.RecvFile(CONN, 32, self.IMAGE_DIR + '/object_image.ppm')
-                FILE = Image.open(self.IMAGE_DIR + '/object_image.ppm')
-                FILE.save(self.IMAGE_DIR + '/object_image.png')
-
-            elif(MSG == 'RECV_VER_IM'):
-                self.RecvFile(CONN, 32, self.IMAGE_DIR + '/verify_image.ppm')
-                FILE = Image.open(self.IMAGE_DIR + '/verify_image.ppm')
-                FILE.save(self.IMAGE_DIR + '/verify_image.png')
-
-            elif(MSG == 'RECV_MAP_PGM'):
-                self.RecvFile(CONN, 32, self.MAP_DIR + '/map.pgm')
-                FILE = Image.open(self.MAP_DIR + '/map.pgm')
-                FILE.save(self.MAP_DIR + '/map.png')
-
-            elif(MSG == 'RECV_MAP_YAML'):
-                self.RecvFile(CONN, 32, self.MAP_DIR + '/map.yaml')
-
             ##############################################################
             #  Message handlers for robot state/pose and server state data
             #  transfer.  Records time of message for use in `DataTimeout'.
-            elif(MSG == 'ARMBOT'):
+            if(MSG == 'ARMBOT'):
                 self.DATA['STATES']['ARMBOT'] = self.RecvLine(CONN)
                 self.RecvLine(CONN)
                 self.Send(CONN, 32, self.FSM.curState.StateName())
@@ -225,6 +205,26 @@ class Server:
             elif(MSG == 'SEND_ARM_POSE'):
                 if(isinstance(self.DATA['POSES']['BASEBOT'], dict)):
                     self.Send(CONN, 32, str(self.DATA['POSES']['BASEBOT']))
+                    
+            ##########################################################
+            #  Message handlers for receiving files (map and images).
+            elif(MSG == 'RECV_OBJ_IM'):
+                self.RecvFile(CONN, 32, self.IMAGE_DIR + '/object_image.ppm')
+                FILE = Image.open(self.IMAGE_DIR + '/object_image.ppm')
+                FILE.save(self.IMAGE_DIR + '/object_image.png')
+
+            elif(MSG == 'RECV_VER_IM'):
+                self.RecvFile(CONN, 32, self.IMAGE_DIR + '/verify_image.ppm')
+                FILE = Image.open(self.IMAGE_DIR + '/verify_image.ppm')
+                FILE.save(self.IMAGE_DIR + '/verify_image.png')
+
+            elif(MSG == 'RECV_MAP_PGM'):
+                self.RecvFile(CONN, 32, self.MAP_DIR + '/map.pgm')
+                FILE = Image.open(self.MAP_DIR + '/map.pgm')
+                FILE.save(self.MAP_DIR + '/map.png')
+
+            elif(MSG == 'RECV_MAP_YAML'):
+                self.RecvFile(CONN, 32, self.MAP_DIR + '/map.yaml')
 
             ##############################################################
             #  Message handlers for sending map, object detection and
