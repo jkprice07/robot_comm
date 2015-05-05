@@ -83,8 +83,8 @@ def QuaternionToEulerDict(DICT_IN):
     return DICT_IN
     
 def EulerToQuaternionDict(DICT_IN):
-    EUL = DICT_IN['pose']['orientation']['yaw'],
-          DICT_IN['pose']['orientation']['pitch'],
+    EUL = DICT_IN['pose']['orientation']['yaw'],\
+          DICT_IN['pose']['orientation']['pitch'],\
           DICT_IN['pose']['orientation']['roll']
     QUAT = quaternion_from_euler(EUL)
     TF_DICT = {}
