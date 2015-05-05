@@ -3,7 +3,7 @@
 # Version: 2.3
 
 import socket
-import time
+from time import time, sleep
 import threading
 import logging
 
@@ -17,12 +17,16 @@ class BotClient:
         self.POSE = 'NONE'
         self.SERV_STATE = 'NONE'
         self.SERV_SYNC = False
+        self.STATE_TIME = 0
+        self.POSE_TIME = 0
 
     #  Starts thread for `Sync' function.
     def Start(self):
         self.SERV_SYNC = True
         self.CLIENT_CONN = threading.Thread(target=self.Sync)
         self.CLIENT_CONN.start()
+        self.TIMEOUT_THREAD = threading.Thread(target=self.DataTimeout)
+        self.TIMEOUT_THREAD
 
     def Stop(self):
         self.SERV_SYNC = False
@@ -42,13 +46,22 @@ class BotClient:
                     self.STATE + '#' + self.POSE + '#'
                 self.Send(SOCK, 1, DATA)
                 self.SERV_STATE = self.Recv(SOCK, 32)
-                time.sleep(0.1)
+                sleep(0.2)
                 SOCK.close()
             except socket.timeout:
                 logging.info('Cannot connect, re-establishing \
                     connection to server...')
-                time.sleep(0.1)
+                sleep(0.2)
         logging.info('Synchronization stopped.')
+        
+    def DataTimeout(self):
+        while(self.SERV_SYNC):
+            CUR_TIME = time()
+            if(CUR_TIME > (self.STATE_TIME + TIMEOUT)):
+                self.STATE = 'NONE'
+            if(CUR_TIME > (self.POSE_TIME + TIMEOUT)):
+                self.POSE = 'NONE'
+            sleep(1)
 
     def Recv(self, CONN, PACK_SIZE):
         DATA = ''
@@ -135,9 +148,11 @@ class BotClient:
 
     def SetState(self, STATE):
         self.STATE = STATE
+        self.STATE_TIME = time()
 
     def SetPose(self, POSE):
         self.POSE = POSE
+        self.POSE_TIME = time()
 
     def ServState(self):
         return self.SERV_STATE
