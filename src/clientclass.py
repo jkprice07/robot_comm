@@ -26,7 +26,7 @@ class BotClient:
         self.CLIENT_CONN = threading.Thread(target=self.Sync)
         self.CLIENT_CONN.start()
         self.TIMEOUT_THREAD = threading.Thread(target=self.DataTimeout)
-        self.TIMEOUT_THREAD
+        self.TIMEOUT_THREAD.start()
 
     def Stop(self):
         self.SERV_SYNC = False
