@@ -73,7 +73,6 @@ class MapClientNode:
                 subprocess.call('cd')
                 subprocess.call('rosrun map_server \
                     map_saver -f map',  shell=True)
-                time.sleep(3)
                 YAML_DATA = self.ReadFile(self.MAP_DIR + '/map.yaml')
                 YAML_DATA = self.FixYAML(YAML_DATA)
                 self.MAP_CLIENT.SendFile(YAML_DATA, 'MAP_YAML')
