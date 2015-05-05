@@ -1,6 +1,7 @@
 #!/usr/bin/python
-
-# Version: 2.3
+#
+#  Jason Price
+#  Version: 2.4
 
 import socket
 from time import time, sleep
@@ -10,6 +11,8 @@ import logging
 
 class BotClient:
 
+    #########################################################
+    #  Initialise client with server address and robot type.
     def __init__(self, HOST_ADDR, BOT_TYPE):
         self.HOST_ADDR = HOST_ADDR
         self.BOT_TYPE = BOT_TYPE
@@ -19,8 +22,9 @@ class BotClient:
         self.SERV_SYNC = False
         self.STATE_TIME = 0
         self.POSE_TIME = 0
-
-    #  Starts thread for `Sync' function.
+        
+    #########################################################
+    #  Starts threads for `Sync' and `DataTimeout' functions
     def Start(self):
         self.SERV_SYNC = True
         self.CLIENT_CONN = threading.Thread(target=self.Sync)
@@ -28,12 +32,15 @@ class BotClient:
         self.TIMEOUT_THREAD = threading.Thread(target=self.DataTimeout)
         self.TIMEOUT_THREAD.start()
 
+    #########################################################
+    #  Ends current threads using `self.SERV_SYNC' variable.
     def Stop(self):
         self.SERV_SYNC = False
         self.SERV_STATE = 'NONE'
-
+        
+    #########################################################
     #  While sync'd update robot pose/state to server
-    #  and request server state
+    #  and request server state.
     def Sync(self):
         logging.info('Synchronization started.')
         while(self.SERV_SYNC):
@@ -53,7 +60,10 @@ class BotClient:
                     connection to server...')
                 sleep(0.2)
         logging.info('Synchronization stopped.')
-        
+       
+    #########################################################
+    #  Resets POSE and STATE variables after a timeout period
+    #  of no updates (TIMEOUT set to 5 seconds).
     def DataTimeout(self):
         TIMEOUT = 5
         while(self.SERV_SYNC):
@@ -64,6 +74,9 @@ class BotClient:
                 self.POSE = 'NONE'
             sleep(1)
 
+    #############################################
+    #  Receive data from socket connection CONN,
+    #  using packet size PACK_SIZE.
     def Recv(self, CONN, PACK_SIZE):
         DATA = ''
         while(True):
@@ -73,7 +86,11 @@ class BotClient:
             else:
                 break
         return DATA
-
+        
+    #############################################
+    #  Receive data from socket connection CONN,
+    #  using packet size PACK_SIZE and save to
+    #  file specified by PATH.
     def RecvFile(self, CONN, PACK_SIZE, PATH):
         FILE = open(PATH, 'wb')
         while(True):
@@ -85,6 +102,9 @@ class BotClient:
         FILE.close()
         CONN.close()
 
+    ################################################
+    #  Depending on TARGET, requests and retrieves 
+    #  pose string for ARMBOT or OBJECT.
     def RecvPose(self, TARGET):
         SOCK = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         SOCK.connect(self.HOST_ADDR)
@@ -98,7 +118,11 @@ class BotClient:
             return POSE
         else:
             return None
-
+            
+    ##################################################
+    #  Receive 2 map files, `map.pgm' and `map/yaml',
+    #  saving in directory specified by DEST.  Using 
+    #  threads to avoid holding up program.
     def RecvMap(self, DEST):
         SOCK_0 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         SOCK_0.connect(self.HOST_ADDR)
@@ -112,7 +136,9 @@ class BotClient:
         THREAD_1 = threading.Thread(target=self.RecvFile,
                                     args=(SOCK_1, 32, DEST + '/map.yaml'))
         THREAD_1.start()
-
+        
+    #################################
+    #  Send input DATA of type TYPE.
     def SendFile(self, DATA, TYPE):
         if(TYPE == 'MAP_YAML'):
             MSG = 'RECV_MAP_YAML#'
@@ -126,9 +152,15 @@ class BotClient:
                                   args=(None, 32, MSG + DATA))
         THREAD.start()
 
+    ##############################################
+    #  Send pose of object (input `PoseStamped() 
+    #  dictionary converted to string and transmitted).
     def SendObjPose(self, POSE):
         self.Send(None, 32, 'RECV_OBJ_POSE#' + str(POSE))
-
+        
+    ##############################################
+    #  Send input DATA to socket connection CONN,
+    #  using packet size PACK_SIZE.
     def Send(self, CONN, PACK_SIZE, DATA):
         SIZE = len(DATA)
         PACK = 0
