@@ -111,7 +111,7 @@ class ArmClientNode:
                 (CUR_SERV_STATE != 'ARM_PICKUP')):
             self.IMAGE_FLAG = None
         #  When object is found (server state FOUND_OBJ),
-        #  a object pose is downloaded, converted to PoseStamped()
+        #  an object pose is downloaded, converted to PoseStamped()
         #  message type and published to necessary ROS topic.
         if(CUR_SERV_STATE == 'FOUND_OBJ'):
             if(not self.POSE_FLAG):
