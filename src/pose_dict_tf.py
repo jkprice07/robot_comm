@@ -1,4 +1,5 @@
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 
 
 def PoseStampedToDict(POSE_IN):
@@ -43,17 +44,17 @@ def PoseCovarianceToDict(POSE_IN):
     return POSE_DICT
 
 
-def DictToPoseStamped(POSE, DICT_IN):
-    POSE_ACT = POSE
-    POSE_ACT.header.frame_id = DICT_IN['header']['frame_id']
-    POSE_ACT.pose.position.x = DICT_IN['pose']['position']['x']
-    POSE_ACT.pose.position.y = DICT_IN['pose']['position']['y']
-    POSE_ACT.pose.position.z = DICT_IN['pose']['position']['z']
-    POSE_ACT.pose.orientation.x = DICT_IN['pose']['orientation']['x']
-    POSE_ACT.pose.orientation.y = DICT_IN['pose']['orientation']['y']
-    POSE_ACT.pose.orientation.z = DICT_IN['pose']['orientation']['z']
-    POSE_ACT.pose.orientation.w = DICT_IN['pose']['orientation']['w']
-    return POSE_ACT
+def DictToPoseStamped(DICT_IN):
+    POSE = PoseStamped()
+    POSE.header.frame_id = DICT_IN['header']['frame_id']
+    POSET.pose.position.x = DICT_IN['pose']['position']['x']
+    POSE.pose.position.y = DICT_IN['pose']['position']['y']
+    POSE.pose.position.z = DICT_IN['pose']['position']['z']
+    POSE.pose.orientation.x = DICT_IN['pose']['orientation']['x']
+    POSE.pose.orientation.y = DICT_IN['pose']['orientation']['y']
+    POSE.pose.orientation.z = DICT_IN['pose']['orientation']['z']
+    POSE.pose.orientation.w = DICT_IN['pose']['orientation']['w']
+    return POSE
 
 
 # def QuaternionToEulerDict(DICT_IN, EUL):
