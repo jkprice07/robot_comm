@@ -17,7 +17,7 @@ from clientclass import BotClient
 from ros_image_conv import RosImageToPPMString
 from pose_dict_tf import *
 
-RATE = 10
+RATE = 2
 
 
 class ArmClientNode:
