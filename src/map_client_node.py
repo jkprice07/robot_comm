@@ -19,16 +19,16 @@ RATE = 2
 class MapClientNode:
 
     ######################################################
-    #  Initialise client with server address HOST_ADDR and 
+    #  Initialise client with server address HOST_ADDR and
     #  map file directory MAP_DIR.
     def __init__(self, HOST_ADDR, MAP_DIR):
         self.HOST_ADDR = HOST_ADDR
         self.MAP_DIR = MAP_DIR
         self.MAP_CLIENT = BotClient(HOST_ADDR, 'MAPBOT')
         self.PRINT_FLAG = None
-        #if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
+        # if(os.path.isfile(self.MAP_DIR + '/map.pgm')):
         #    os.remove(self.MAP_DIR + '/map.pgm')
-        #if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
+        # if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
         #    os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
         #  Subscriptions for MAP state and MAP pose.
@@ -52,7 +52,7 @@ class MapClientNode:
     #  co-ords from quaternion and send to server.
     def MapPoseCallback(self, DATA):
         POSE_DICT = PoseStampedToDict(DATA)
-        POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT)
+        POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT))
         self.MAP_CLIENT.SetPose(POSE_DICT_STRING)
 
     ####################################################
@@ -82,7 +82,7 @@ class MapClientNode:
         else:
             self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
                 os.path.isfile(self.MAP_DIR + '/map.yaml')
-                
+
     #######################################################
     #  Amends first line of `.yaml' DATA to fix image name.
     def FixYAML(self, DATA):
@@ -109,7 +109,7 @@ class MapClientNode:
             return None
 
     ###############################################
-    #  Spin function starts/stops MAP client and 
+    #  Spin function starts/stops MAP client and
     #  executes Work Callback at desired RATE.
     def Spin(self):
         self.MAP_CLIENT.Start()

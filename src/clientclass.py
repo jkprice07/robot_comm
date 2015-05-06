@@ -22,7 +22,7 @@ class BotClient:
         self.SERV_SYNC = False
         self.STATE_TIME = 0
         self.POSE_TIME = 0
-        
+
     #########################################################
     #  Starts threads for `Sync' and `DataTimeout' functions
     def Start(self):
@@ -37,7 +37,7 @@ class BotClient:
     def Stop(self):
         self.SERV_SYNC = False
         self.SERV_STATE = 'NONE'
-        
+
     #########################################################
     #  While sync'd update robot pose/state to server
     #  and request server state.
@@ -60,7 +60,7 @@ class BotClient:
                     connection to server...')
                 sleep(0.2)
         logging.info('Synchronization stopped.')
-       
+
     #########################################################
     #  Resets POSE and STATE variables after a timeout period
     #  of no updates (TIMEOUT set to 5 seconds).
@@ -86,7 +86,7 @@ class BotClient:
             else:
                 break
         return DATA
-        
+
     #############################################
     #  Receive data from socket connection CONN,
     #  using packet size PACK_SIZE and save to
@@ -103,7 +103,7 @@ class BotClient:
         CONN.close()
 
     ################################################
-    #  Depending on TARGET, requests and retrieves 
+    #  Depending on TARGET, requests and retrieves
     #  pose string for ARMBOT or OBJECT.
     def RecvPose(self, TARGET):
         SOCK = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -118,10 +118,10 @@ class BotClient:
             return POSE
         else:
             return None
-            
+
     ##################################################
     #  Receive 2 map files, `map.pgm' and `map.yaml',
-    #  saving in directory specified by DEST.  Using 
+    #  saving in directory specified by DEST.  Using
     #  threads to avoid holding up program.
     def RecvMap(self, DEST):
         SOCK_0 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -136,7 +136,7 @@ class BotClient:
         THREAD_1 = threading.Thread(target=self.RecvFile,
                                     args=(SOCK_1, 32, DEST + '/map.yaml'))
         THREAD_1.start()
-        
+
     #################################
     #  Send input DATA of type TYPE.
     def SendFile(self, DATA, TYPE):
@@ -153,11 +153,11 @@ class BotClient:
         THREAD.start()
 
     ##############################################
-    #  Send pose of object (input `PoseStamped() 
+    #  Send pose of object (input `PoseStamped()
     #  dictionary converted to string and transmitted).
     def SendObjPose(self, POSE):
         self.Send(None, 32, 'RECV_OBJ_POSE#' + str(POSE))
-        
+
     ##############################################
     #  Send input DATA to socket connection CONN,
     #  using packet size PACK_SIZE.

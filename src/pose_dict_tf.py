@@ -47,7 +47,7 @@ def PoseCovarianceToDict(POSE_IN):
 def DictToPoseStamped(DICT_IN):
     POSE = PoseStamped()
     POSE.header.frame_id = DICT_IN['header']['frame_id']
-    POSET.pose.position.x = DICT_IN['pose']['position']['x']
+    POSE.pose.position.x = DICT_IN['pose']['position']['x']
     POSE.pose.position.y = DICT_IN['pose']['position']['y']
     POSE.pose.position.z = DICT_IN['pose']['position']['z']
     POSE.pose.orientation.x = DICT_IN['pose']['orientation']['x']
@@ -81,11 +81,12 @@ def QuaternionToEulerDict(DICT_IN):
     TF_DICT['pose']['orientation']['yaw'] = EUL[2]
     DICT_IN['pose']['orientation'] = TF_DICT['pose']['orientation']
     return DICT_IN
-    
+
+
 def EulerToQuaternionDict(DICT_IN):
     EUL = DICT_IN['pose']['orientation']['yaw'],\
-          DICT_IN['pose']['orientation']['pitch'],\
-          DICT_IN['pose']['orientation']['roll']
+        DICT_IN['pose']['orientation']['pitch'],\
+        DICT_IN['pose']['orientation']['roll']
     QUAT = quaternion_from_euler(EUL)
     TF_DICT = {}
     TF_DICT['pose'] = {}

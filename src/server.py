@@ -205,7 +205,7 @@ class Server:
             elif(MSG == 'SEND_ARM_POSE'):
                 if(isinstance(self.DATA['POSES']['BASEBOT'], dict)):
                     self.Send(CONN, 32, str(self.DATA['POSES']['BASEBOT']))
-                    
+
             ##########################################################
             #  Message handlers for receiving files (map and images).
             elif(MSG == 'RECV_OBJ_IM'):
@@ -232,12 +232,11 @@ class Server:
             #  (.pgm + .yaml).
             elif(MSG == 'SEND_OBJ_PNG'):
                 print 'TSVETAN'
-		if(self.IMAGE_FLAG):
+                if(self.IMAGE_FLAG):
                     print 'TSVETAN 2'
                     DATA = self.ReadFile(self.IMAGE_DIR + '/object_image.png')
                     self.Send(CONN, 1024, DATA)
                     print 'TSVETAN 3'
-                    
 
             elif(MSG == 'SEND_VER_PNG'):
                 if(self.IMAGE_FLAG):

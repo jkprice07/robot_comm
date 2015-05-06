@@ -23,7 +23,7 @@ RATE = 2
 class ArmClientNode:
 
     ######################################################
-    #  Initialise client with server address HOST_ADDR and 
+    #  Initialise client with server address HOST_ADDR and
     #  map file directory MAP_DIR.  A client is initialised
     #  for the ARM and the BASE, and any exisiting map files
     #  are deleted on startup.
@@ -40,7 +40,7 @@ class ArmClientNode:
         if(os.path.isfile(self.MAP_DIR + '/map.yaml')):
             os.remove(self.MAP_DIR + '/map.yaml')
         self.MAP_FLAG = None
-        #  Subscriptions for ARM state, BASE state, 
+        #  Subscriptions for ARM state, BASE state,
         #  BASE pose and ARM image data.
         rospy.Subscriber('/uarm/state',
                          String,
@@ -79,7 +79,7 @@ class ArmClientNode:
 
     ######################################################
     #  When the server is waiting for an image file to be
-    #  uploaded (for user decision), ROS geometry_msgs 
+    #  uploaded (for user decision), ROS geometry_msgs
     #  Image  converted to PPM and sent to server.
     def ImageCallback(self, DATA):
         CUR_SERV_STATE = self.ARM_CLIENT.ServState()
@@ -133,9 +133,9 @@ class ArmClientNode:
         else:
             self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
                 os.path.isfile(self.MAP_DIR + '/map.yaml')
-                
+
     ####################################################
-    #  Spin function starts/stops ARM and BASE clients 
+    #  Spin function starts/stops ARM and BASE clients
     #  and executes Work Callback at desired RATE.
     def Spin(self):
         self.ARM_CLIENT.Start()

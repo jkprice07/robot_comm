@@ -19,9 +19,9 @@ RATE = 5
 
 
 class BinClientNode:
-    
+
     ######################################################
-    #  Initialise client with server address HOST_ADDR and 
+    #  Initialise client with server address HOST_ADDR and
     #  map file directory MAP_DIR.  Any exisiting map files
     #  are deleted on startup.
     def __init__(self, HOST_ADDR, MAP_DIR):
@@ -47,7 +47,7 @@ class BinClientNode:
                                           PoseStamped)
         self.SERV_STATE = rospy.Publisher('/client_node/serv_state',
                                           String)
-   
+
     #######################################
     #  Updates BIN state in client.
     def BinStateCallback(self, DATA):
@@ -110,7 +110,7 @@ class BinClientNode:
                 os.path.isfile(self.MAP_DIR + '/map.yaml')
 
     ####################################################
-    #  Spin function starts/stops ARM and BASE clients 
+    #  Spin function starts/stops ARM and BASE clients
     #  and executes Work Callback at desired RATE.
     def Spin(self):
         self.BIN_CLIENT.Start()
