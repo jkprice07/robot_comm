@@ -9,6 +9,7 @@ from clientclass import BotClient
 from move_base_msgs.msg import *
 from geometry_msgs.msg import PoseStamped
 from pose_dict_tf import *
+from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
 RATE = 10
 
@@ -28,8 +29,11 @@ class FlyNode:
                                           PoseStamped, self.PoseCallback)
 
     def PoseCallback(self, DATA):
-        self.POSE_DIC = PoseStampedToDict(DATA)
-        self.FLY_CLIENT.SendObjPose(self.POSE_DIC)
+        POSE_DICT = PoseStampedToDict(DATA)
+        POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT))
+        self.ARM_BASE_CLIENT.SetPose(POSE_DICT_STRING)
+        # self.POSE_DIC = PoseStampedToDict(DATA)
+        # self.FLY_CLIENT.SendObjPose(self.POSE_DIC)
 
     def WorkCallback(self):
         CUR_SERV_STATE = self.FLY_CLIENT.ServState()
