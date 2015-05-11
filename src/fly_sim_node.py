@@ -30,9 +30,9 @@ class FlyNode:
 
     def PoseCallback(self, DATA):
         POSE_DICT = PoseStampedToDict(DATA)
-        POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT))
+        #POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT))
         self.FLY_CLIENT.SetPose(POSE_DICT_STRING)
-        print self.POSE_DICT_STRING
+        print POSE_DICT_STRING
         # self.POSE_DIC = PoseStampedToDict(DATA)
         # self.FLY_CLIENT.SendObjPose(self.POSE_DIC)
 
