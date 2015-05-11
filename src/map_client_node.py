@@ -79,8 +79,9 @@ class MapClientNode:
                 self.MAP_CLIENT.SendFile(PGM_DATA, 'MAP_PGM')
                 self.MAP_FLAG = True
         else:
-            self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
-                os.path.isfile(self.MAP_DIR + '/map.yaml')
+            #self.MAP_FLAG = os.path.isfile(self.MAP_DIR + '/map.pgm') and \
+                #os.path.isfile(self.MAP_DIR + '/map.yaml')
+            self.MAP_FLAG = None
 
     #######################################################
     #  Amends first line of `.yaml' DATA to fix image name.
