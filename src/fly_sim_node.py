@@ -32,6 +32,7 @@ class FlyNode:
         POSE_DICT = PoseStampedToDict(DATA)
         POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT))
         self.FLY_CLIENT.SetPose(POSE_DICT_STRING)
+        print self.POSE_DICT_STRING
         # self.POSE_DIC = PoseStampedToDict(DATA)
         # self.FLY_CLIENT.SendObjPose(self.POSE_DIC)
 
