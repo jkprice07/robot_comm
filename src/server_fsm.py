@@ -321,13 +321,13 @@ class BIN_TO_BASE(State):
     def Execute(self):
         BOT_DATA = self.SERV.BotData()
         OBJ_POSE = self.SERV.ObjPose()
-        if(BOT_DATA['STATES']['BINBOT'] == 'FSM_MOVE_TO_BASE'):
-            if(OBJ_POSE):
-                if((self.SERV.ViewCount() + 20) < time()):
-                    self.SERV.FSM.ToTransition('To_FOUND_OBJ')
-            else:
-                self.SERV.SetCount()
-                self.SERV.FSM.ToTransition('To_RESET')
+        #if(BOT_DATA['STATES']['BINBOT'] == 'FSM_MOVE_TO_BASE'):
+        if(OBJ_POSE):
+            if((self.SERV.ViewCount() + 20) < time()):
+                self.SERV.FSM.ToTransition('To_FOUND_OBJ')
+        else:
+            self.SERV.SetCount()
+            self.SERV.FSM.ToTransition('To_RESET')
 
     def StateName(self):
         return 'BIN_TO_BASE'
