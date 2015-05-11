@@ -70,9 +70,8 @@ class MapClientNode:
         #  the `.pgm' and modified `.yaml' are sent to the server.
         if(CUR_SERV_STATE == 'MAP_DONE'):
             if(not self.MAP_FLAG):
-                subprocess.call('cd')
-                subprocess.call('rosrun map_server \
-                    map_saver -f map',  shell=True)
+                #subprocess.call('rosrun map_server \
+                    #map_saver -f map',  shell=True)
                 YAML_DATA = self.ReadFile(self.MAP_DIR + '/map.yaml')
                 YAML_DATA = self.FixYAML(YAML_DATA)
                 self.MAP_CLIENT.SendFile(YAML_DATA, 'MAP_YAML')
