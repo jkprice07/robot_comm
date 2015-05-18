@@ -207,11 +207,12 @@ class USER_DEC(State):
             self.SERV.FSM.ToTransition('To_BIN_TO_ARM')
         elif(USER_INPUT == 'LEAVE'):
             self.SERV.PopObjPose()
-            if(OBJ_POSE):
-                self.SERV.FSM.ToTransition('To_FOUND_OBJ')
-            else:
-                self.SERV.SetCount()
-                self.SERV.FSM.ToTransition('To_RESET')
+            self.SERV.FSM.ToTransition('To_FINDING_OBJ')
+            # if(OBJ_POSE):
+            #     self.SERV.FSM.ToTransition('To_FOUND_OBJ')
+            # else:
+            #     self.SERV.SetCount()
+            #     self.SERV.FSM.ToTransition('To_RESET')
 
     def StateName(self):
         return 'USER_DEC'
@@ -322,12 +323,12 @@ class BIN_TO_BASE(State):
         BOT_DATA = self.SERV.BotData()
         OBJ_POSE = self.SERV.ObjPose()
         #if(BOT_DATA['STATES']['BINBOT'] == 'FSM_MOVE_TO_BASE'):
-        if(OBJ_POSE):
-            if((self.SERV.ViewCount() + 20) < time()):
+        if((self.SERV.ViewCount() + 20) < time()):
+            if(OBJ_POSE):
                 self.SERV.FSM.ToTransition('To_FOUND_OBJ')
-        else:
-            self.SERV.SetCount()
-            self.SERV.FSM.ToTransition('To_RESET')
+            else:
+                self.SERV.SetCount()
+                self.SERV.FSM.ToTransition('To_RESET')
 
     def StateName(self):
         return 'BIN_TO_BASE'

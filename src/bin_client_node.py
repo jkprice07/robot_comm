@@ -58,14 +58,6 @@ class BinClientNode:
     #  to a dictionary, converts the data to euler
     #  co-ords from quaternion and send to server.
     def BinPoseCallback(self, DATA):
-        # POSE_DICT = PoseCovarianceToDict(DATA)
-        # QUAT = [POSE_DICT['pose']['orientation']['x'],
-        #         POSE_DICT['pose']['orientation']['y'],
-        #         POSE_DICT['pose']['orientation']['z'],
-        #         POSE_DICT['pose']['orientation']['w']]
-        # EUL = euler_from_quaternion(QUAT)
-        # POSE_DICT = QuaternionToEulerDict(POSE_DICT, EUL)
-        # self.BIN_CLIENT.SetPose(str(POSE_DICT))
         POSE_DICT = PoseCovarianceToDict(DATA)
         POSE_DICT_STRING = str(QuaternionToEulerDict(POSE_DICT))
         self.BIN_CLIENT.SetPose(POSE_DICT_STRING)

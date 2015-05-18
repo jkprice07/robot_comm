@@ -21,7 +21,6 @@ class Server:
     #  Initialised with HOST_ADDR as tuple consisiting of {IP, PORT},
     #  MAP_DIR a string pointing to directory for map files,
     #  IMAGE_DIR a string pointing to directory for image files.
-
     def __init__(self, HOST_ADDR, MAP_DIR, IMAGE_DIR):
         #  Input variables
         self.HOST_ADDR = HOST_ADDR
@@ -111,8 +110,8 @@ class Server:
     def Run(self):
         self.SYNC = True
         self.SERV_THREAD = threading.Thread(target=self.Listen)
-        self.DATA_THREAD = threading.Thread(target=self.DataTimeout)
         self.SERV_THREAD.start()
+        self.DATA_THREAD = threading.Thread(target=self.DataTimeout)
         self.DATA_THREAD.start()
 
     #########################################################
@@ -231,12 +230,9 @@ class Server:
             #  verification PNGs to iPad and map files to robot client
             #  (.pgm + .yaml).
             elif(MSG == 'SEND_OBJ_PNG'):
-                print 'TSVETAN'
                 if(self.IMAGE_FLAG):
-                    print 'TSVETAN 2'
                     DATA = self.ReadFile(self.IMAGE_DIR + '/object_image.png')
                     self.Send(CONN, 1024, DATA)
-                    print 'TSVETAN 3'
 
             elif(MSG == 'SEND_VER_PNG'):
                 if(self.IMAGE_FLAG):
@@ -244,13 +240,10 @@ class Server:
                     self.Send(CONN, 1024, DATA)
 
             elif(MSG == 'SEND_MAP_PNG'):
-                print 'TSVETAN'
                 if(os.path.isfile(self.MAP_DIR + '/map.png')):
-                    print 'TSVETAN 2'
                     DATA = self.ReadFile(self.MAP_DIR + '/map.png')
                     print len(DATA)
                     self.Send(CONN, 1024, DATA)
-                    print 'TSVETAN 3'
                 elif(os.path.isfile(self.MAP_DIR + '/map.pgm')):
                     FILE = Image.open(self.MAP_DIR + '/map.pgm')
                     FILE.save(self.MAP_DIR + '/map.png')
