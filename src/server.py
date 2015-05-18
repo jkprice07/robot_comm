@@ -348,7 +348,6 @@ class Server:
             if(CUR_STATE == 'RESET'):
                 self.START_PROCESS = False
                 self.OBJ_POSE = []
-            # self.FSM.Execute()
             sleep(1)
 
     ####################################################

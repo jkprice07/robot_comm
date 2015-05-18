@@ -179,6 +179,9 @@ class BotClient:
             if(SENT == SIZE):
                 break
 
+    ###########################################
+    #  Set client state and pose, read client 
+    #  and server states.
     def SetState(self, STATE):
         self.STATE = STATE
         self.STATE_TIME = time()
