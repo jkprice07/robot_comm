@@ -80,11 +80,6 @@ class BinClientNode:
                 POSE_STRING = self.BIN_CLIENT.RecvPose('OBJ')
                 rospy.loginfo('POSE: ' + POSE_STRING)
                 if(isinstance(POSE_STRING, str)):
-                    # POSE_DICT = ast.literal_eval(POSE_STRING)
-                    # ROS_POSE = PoseStamped()
-                    # ROS_POSE = DictToPoseStamped(ROS_POSE, POSE_DICT)
-                    # self.POSE_TOPIC.publish(ROS_POSE)
-                    # self.POSE_FLAG = True
                     POSE_DICT = ast.literal_eval(POSE_STRING)
                     POSE_STAMPED = DictToPoseStamped(POSE_DICT)
                     self.POSE_TOPIC.publish(POSE_STAMPED)
@@ -102,8 +97,8 @@ class BinClientNode:
                 os.path.isfile(self.MAP_DIR + '/map.yaml')
 
     ####################################################
-    #  Spin function starts/stops ARM and BASE clients
-    #  and executes Work Callback at desired RATE.
+    #  Spin function starts/stops BIN client and 
+    #  executes Work Callback at desired RATE.
     def Spin(self):
         self.BIN_CLIENT.Start()
         rate = rospy.Rate(RATE)
