@@ -1,7 +1,7 @@
 HOST:    192.168.0.104
-S_MAP:   /home/peterhill/Documents/map_server
-S_IM:    /home/peterhill/Documents/image_server
+S_MAP:   /home/hrteam/Documents/server_maps
+S_IM:    /home/hrteam/Documents/server_images
 ARM_MAP: /home/jason/map
 BIN_MAP: /home/sglvladi/map
 MAP_MAP: /home/smartlab-tb01
-FLY_MAP: /home/peterhill/Documents/map_fly
+FLY_MAP: /home/hrteam/Documents/flybot_maps
