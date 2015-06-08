@@ -1,7 +1,7 @@
-HOST:    192.168.0.104
+HOST:    192.168.0.103
 S_MAP:   /home/hrteam/Documents/server_maps
 S_IM:    /home/hrteam/Documents/server_images
 ARM_MAP: /home/jason/map
 BIN_MAP: /home/sglvladi/map
-MAP_MAP: /home/smartlab-tb01
+MAP_MAP: /home/smartlab-tb04
 FLY_MAP: /home/hrteam/Documents/flybot_maps
