@@ -13,28 +13,40 @@ while(True):
         4 to VERIFY successful pickup,\n\
         5 to RESET,\n\
         6 to QUIT.'
-    sock = socket.socket()
-    sock.connect(HOST_ADDR)
     ACTION = raw_input('')
     if(ACTION == '1'):
+        sock = socket.socket()
+        sock.connect(HOST_ADDR)
         sock.send('START#')
     elif(ACTION == '2'):
+        sock = socket.socket()
+        sock.connect(HOST_ADDR)
         sock.send('INPUT#TRUE#')
     elif(ACTION == '3'):
         print 'Enter 1 to PICKUP,\n2 to LEAVE.'
         ACTION = raw_input('')
         if(ACTION == '1'):
+            sock = socket.socket()
+            sock.connect(HOST_ADDR)
             sock.send('INPUT#PICKUP#')
         elif(ACTION == '2'):
+            sock = socket.socket()
+            sock.connect(HOST_ADDR)
             sock.send('INPUT#LEAVE#')
     elif(ACTION == '4'):
         print 'Enter 1 for success,\n2 for failure.'
         ACTION = raw_input('')
         if(ACTION == '1'):
+            sock = socket.socket()
+            sock.connect(HOST_ADDR)
             sock.send('INPUT#SUCC#')
         elif(ACTION == '2'):
+            sock = socket.socket()
+            sock.connect(HOST_ADDR)
             sock.send('INPUT#FAIL#')
     elif(ACTION == '5'):
+        sock = socket.socket()
+        sock.connect(HOST_ADDR)
         sock.send('RESET#')
     elif(ACTION == '6'):
         break
