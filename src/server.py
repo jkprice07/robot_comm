@@ -189,6 +189,9 @@ class Server:
                     self.DATA['POSES']['FLYBOT'] = ast.literal_eval(POSE)
                 self.Send(CONN, 32, self.FSM.curState.StateName())
                 self.FLY_TIME = time()
+                
+            elif(MSG == 'IPAD'):
+                self.Send(CONN, 32, self.FSM.curState.StateName())
 
             ###################################################
             #  Message handler for receiving object pose (i.e.
