@@ -17,6 +17,7 @@ class Ipad:
 
     def Spin(self):
         self.CLIENT.Start()
+        time.sleep(2)
         while(True):
             SERV_STATE = self.CLIENT.ServState()
             if(SERV_STATE == 'USER_DEC'):
