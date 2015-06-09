@@ -15,16 +15,14 @@ class Ipad:
     def __init__(self, HOST_ADDR):
         self.CLIENT = BotClient(HOST_ADDR, 'IPAD')
 
-    def WorkCallback(self):
-        SERV_STATE = self.CLIENT.ServState()
-        if(SERV_STATE == 'USER_DEC'):
-            self.CLIENT.Send(None , 32, 'INPUT#PICKUP#')
-        elif(SERV_STATE == 'PICKUP_CHECK'):
-            self.CLIENT.Send(None , 32, 'INPUT#SUCC#')
-
     def Spin(self):
         self.CLIENT.Start()
         while(True):
+            SERV_STATE = self.CLIENT.ServState()
+            if(SERV_STATE == 'USER_DEC'):
+                self.CLIENT.Send(None , 32, 'INPUT#PICKUP#')
+            elif(SERV_STATE == 'PICKUP_CHECK'):
+                self.CLIENT.Send(None , 32, 'INPUT#SUCC#')
             print '1 to START,\n\
                 2 to signal MAP completion,\n\
                 3 to RESET,\n\
@@ -38,7 +36,6 @@ class Ipad:
                 self.CLIENT.Send(None , 32, 'RESET#')
             elif(ACTION == '4'):
                 break
-            self.WorkCallback()
             time.sleep(1)
         self.CLIENT.Stop()
 
