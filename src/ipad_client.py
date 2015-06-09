@@ -17,9 +17,9 @@ class Ipad:
     def WorkCallback(self):
         SERV_STATE = self.CLIENT.ServState()
         if(SERV_STATE == 'USER_DEC'):
-            self.CLIENT.Send(, 32, 'INPUT#PICKUP#')
+            self.CLIENT.Send(None , 32, 'INPUT#PICKUP#')
         elif(SERV_STATE == 'PICKUP_CHECK):
-            self.CLIENT.Send(, 32, 'INPUT#SUCC#')
+            self.CLIENT.Send(None , 32, 'INPUT#SUCC#')
 
     def Spin(self):
         self.CLIENT.Start()
@@ -30,11 +30,11 @@ class Ipad:
                 4 to QUIT.'
             ACTION = raw_input('')
             if(ACTION == '1'):
-                self.CLIENT.Send(, 32, 'START#')
+                self.CLIENT.Send(None , 32, 'START#')
             elif(ACTION == '2'):
-                self.CLIENT.Send(, 32, 'INPUT#TRUE#')
+                self.CLIENT.Send(None , 32, 'INPUT#TRUE#')
             elif(ACTION == '3'):
-                sself.CLIENT.Send(, 32, 'RESET#')
+                sself.CLIENT.Send(None , 32, 'RESET#')
             elif(ACTION == '4'):
                 break
             self.WorkCallback()
