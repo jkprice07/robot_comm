@@ -5,6 +5,7 @@
 import os
 import threading
 import time
+import socket
 from read_settings import *
 from clientclass import BotClient
 
@@ -12,7 +13,7 @@ from clientclass import BotClient
 class Ipad:
 
     def __init__(self, HOST_ADDR):
-        self.CLIENT = BotClient(HOST_ADDR, '')
+        self.CLIENT = BotClient(HOST_ADDR, 'IPAD')
 
     def WorkCallback(self):
         SERV_STATE = self.CLIENT.ServState()
@@ -34,7 +35,7 @@ class Ipad:
             elif(ACTION == '2'):
                 self.CLIENT.Send(None , 32, 'INPUT#TRUE#')
             elif(ACTION == '3'):
-                sself.CLIENT.Send(None , 32, 'RESET#')
+                self.CLIENT.Send(None , 32, 'RESET#')
             elif(ACTION == '4'):
                 break
             self.WorkCallback()
