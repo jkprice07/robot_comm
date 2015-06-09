@@ -18,7 +18,7 @@ class Ipad:
         SERV_STATE = self.CLIENT.ServState()
         if(SERV_STATE == 'USER_DEC'):
             self.CLIENT.Send(None , 32, 'INPUT#PICKUP#')
-        elif(SERV_STATE == 'PICKUP_CHECK):
+        elif(SERV_STATE == 'PICKUP_CHECK'):
             self.CLIENT.Send(None , 32, 'INPUT#SUCC#')
 
     def Spin(self):
